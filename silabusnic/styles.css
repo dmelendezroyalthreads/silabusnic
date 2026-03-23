@@ -546,6 +546,24 @@ h1 {
   gap: 14px;
 }
 
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.active-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(17, 46, 87, 0.08);
+  border: 1px solid rgba(17, 46, 87, 0.12);
+  color: var(--ink);
+  font-size: 0.8rem;
+}
+
 .materials-list {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }

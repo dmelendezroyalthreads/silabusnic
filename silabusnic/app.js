@@ -29,6 +29,7 @@ const els = {
   typeFilter: document.querySelector("#type-filter"),
   progressFilter: document.querySelector("#progress-filter"),
   materialsList: document.querySelector("#materials-list"),
+  activeFilters: document.querySelector("#active-filters"),
   resultsSummary: document.querySelector("#results-summary"),
   emptyState: document.querySelector("#empty-state"),
   showPending: document.querySelector("#show-pending"),
@@ -230,9 +231,44 @@ function materialDetails(item) {
   return details.map((detail) => `<span>${detail}</span>`).join("");
 }
 
+function activeFilterEntries() {
+  const entries = [
+    ["Career", state.filters.career],
+    ["Year", state.filters.year],
+    ["Search", state.filters.query.trim()],
+    ["Semester", state.filters.semester],
+    ["Midterm", state.filters.midterm],
+    ["Subject", state.filters.subject],
+    ["Type", state.filters.type],
+    ["Progress", state.filters.progress],
+  ];
+
+  return entries.filter(([, value]) => value && value !== "all");
+}
+
+function renderActiveFilters() {
+  const filters = activeFilterEntries();
+  els.activeFilters.innerHTML = "";
+
+  if (!filters.length) {
+    els.activeFilters.classList.add("hidden");
+    return;
+  }
+
+  for (const [label, value] of filters) {
+    const chip = document.createElement("span");
+    chip.className = "active-filter-chip";
+    chip.textContent = `${label}: ${value}`;
+    els.activeFilters.append(chip);
+  }
+
+  els.activeFilters.classList.remove("hidden");
+}
+
 function renderMaterials() {
   const materials = filteredMaterials();
   els.materialsList.innerHTML = "";
+  renderActiveFilters();
 
   for (const item of materials) {
     const node = els.template.content.firstElementChild.cloneNode(true);
