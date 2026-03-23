@@ -1,6 +1,7 @@
 const state = {
-  role: "student",
+  role: "",
   selectedStudentId: "",
+  selectedProfessorId: "",
   catalog: null,
   filters: {
     career: "",
@@ -13,6 +14,7 @@ const state = {
     progress: "all",
   },
   acquiredByStudent: {},
+  professorActivity: {},
 };
 
 const els = {
@@ -20,7 +22,11 @@ const els = {
   roleProfessor: document.querySelector("#role-professor"),
   roleDescription: document.querySelector("#role-description"),
   professorWorkflow: document.querySelector("#professor-workflow"),
+  progressCard: document.querySelector(".progress-card"),
+  studentLoginCard: document.querySelector("#student-login-card"),
+  professorLoginCard: document.querySelector("#professor-login-card"),
   studentSelect: document.querySelector("#student-select"),
+  professorSelect: document.querySelector("#professor-select"),
   careerFilter: document.querySelector("#career-filter"),
   yearFilter: document.querySelector("#year-filter"),
   searchInput: document.querySelector("#search-input"),
@@ -48,14 +54,25 @@ const els = {
   statPending: document.querySelector("#stat-pending"),
   statSemesters: document.querySelector("#stat-semesters"),
   statStudentMidterms: document.querySelector("#stat-student-midterms"),
+  professorActiveName: document.querySelector("#professor-active-name"),
+  professorEditingCount: document.querySelector("#professor-editing-count"),
+  professorUpdatedCount: document.querySelector("#professor-updated-count"),
 };
 
 function storageKey(studentId) {
   return `silabusnic-acquired-${studentId}`;
 }
 
+function professorStorageKey(professorId) {
+  return `silabusnic-professor-${professorId}`;
+}
+
 function getSelectedStudent() {
   return state.catalog.students.find((student) => student.id === state.selectedStudentId) || state.catalog.students[0];
+}
+
+function getSelectedProfessor() {
+  return state.catalog.professors.find((professor) => professor.id === state.selectedProfessorId) || null;
 }
 
 function careerForItem(item) {
@@ -82,11 +99,17 @@ async function loadCatalog() {
   }
   state.catalog = await response.json();
   state.selectedStudentId = state.catalog.students[0]?.id || "";
+  state.selectedProfessorId = state.catalog.professors?.[0]?.id || "";
 
   for (const student of state.catalog.students) {
     const raw = localStorage.getItem(storageKey(student.id));
     const ids = raw ? JSON.parse(raw) : [];
     state.acquiredByStudent[student.id] = new Set(ids);
+  }
+
+  for (const professor of state.catalog.professors || []) {
+    const raw = localStorage.getItem(professorStorageKey(professor.id));
+    state.professorActivity[professor.id] = raw ? JSON.parse(raw) : {};
   }
 }
 
@@ -117,6 +140,15 @@ function populateControls() {
     els.studentSelect.append(option);
   }
   els.studentSelect.value = state.selectedStudentId;
+
+  els.professorSelect.innerHTML = "";
+  for (const professor of state.catalog.professors || []) {
+    const option = document.createElement("option");
+    option.value = professor.id;
+    option.textContent = `${professor.name} • ${professor.department}`;
+    els.professorSelect.append(option);
+  }
+  els.professorSelect.value = state.selectedProfessorId;
 
   const materials = state.catalog.materials;
   fillSelect(els.careerFilter, [...new Set(materials.map((item) => careerForItem(item)))].sort(), "Selecciona una carrera");
@@ -214,16 +246,22 @@ function filteredMaterials() {
 
 function roleDescription() {
   if (state.role === "professor") {
-    return "Los profesores administran el catálogo XLS, las imágenes y los detalles de materiales para cada semestre y parcial.";
+    return "Los profesores administran el catálogo XLS y pueden marcar materiales en edición o con cambios realizados.";
   }
-  return "Los estudiantes pueden revisar materiales, filtrar por semestre o parcial y llevar seguimiento de lo ya adquirido.";
+  if (state.role === "student") {
+    return "Los estudiantes pueden revisar materiales, filtrar por semestre o parcial y llevar seguimiento de lo ya adquirido.";
+  }
+  return "Selecciona si deseas entrar como estudiante o como profesor.";
 }
 
 function renderRoleState() {
   els.roleStudent.classList.toggle("active", state.role === "student");
   els.roleProfessor.classList.toggle("active", state.role === "professor");
   els.roleDescription.textContent = roleDescription();
-  els.progressFilter.disabled = state.role === "professor";
+  els.progressFilter.disabled = state.role !== "student";
+  els.progressCard.classList.toggle("hidden", state.role !== "student");
+  els.studentLoginCard.classList.toggle("hidden", state.role !== "student");
+  els.professorLoginCard.classList.toggle("hidden", state.role !== "professor");
   els.professorWorkflow.classList.toggle("hidden", state.role !== "professor");
 }
 
@@ -237,11 +275,46 @@ function renderStudentStats() {
   const semesters = new Set(materials.map((item) => item.semester)).size;
   const midterms = new Set(materials.map((item) => item.midterm)).size;
 
-  els.studentName.textContent = hasRequiredHeaderSelection() ? selected.name : "Selecciona carrera y año";
+  if (state.role !== "student" || !hasRequiredHeaderSelection()) {
+    els.studentName.textContent = "Selecciona carrera, año y estudiante";
+    els.statAcquired.textContent = "0";
+    els.statPending.textContent = "0";
+    els.statSemesters.textContent = "0";
+    els.statStudentMidterms.textContent = "0";
+    return;
+  }
+
+  els.studentName.textContent = selected.name;
   els.statAcquired.textContent = String(acquiredForCohort);
   els.statPending.textContent = String(Math.max(total - acquiredForCohort, 0));
   els.statSemesters.textContent = String(semesters);
   els.statStudentMidterms.textContent = String(midterms);
+}
+
+function getProfessorActivity(professorId = state.selectedProfessorId) {
+  return state.professorActivity[professorId] || {};
+}
+
+function persistProfessorActivity() {
+  localStorage.setItem(
+    professorStorageKey(state.selectedProfessorId),
+    JSON.stringify(getProfessorActivity())
+  );
+}
+
+function renderProfessorStats() {
+  const professor = getSelectedProfessor();
+  const materials = cohortMaterials();
+  const materialIds = new Set(materials.map((item) => item.id));
+  const activity = getProfessorActivity();
+  const statuses = Object.entries(activity)
+    .filter(([materialId]) => materialIds.has(materialId))
+    .map(([, status]) => status);
+
+  els.professorActiveName.textContent =
+    state.role === "professor" && professor ? professor.name : "Sin profesor seleccionado";
+  els.professorEditingCount.textContent = String(statuses.filter((status) => status === "editing").length);
+  els.professorUpdatedCount.textContent = String(statuses.filter((status) => status === "updated").length);
 }
 
 function persistStudentProgress() {
@@ -342,10 +415,38 @@ function renderMaterials() {
     node.querySelector(".material-details").innerHTML = materialDetails(item);
 
     const button = node.querySelector(".toggle-acquired");
+    const professorStatus = node.querySelector(".professor-status");
     if (state.role === "professor") {
-      button.textContent = "Profesor puede editar";
-      button.disabled = true;
+      const activity = getProfessorActivity();
+      const status = activity[item.id] || "";
+      professorStatus.classList.remove("hidden");
+      professorStatus.textContent = status === "editing"
+        ? "Estado del profesor: en edición"
+        : status === "updated"
+          ? "Estado del profesor: cambio marcado"
+          : "Estado del profesor: sin cambios";
+      button.textContent = status === "editing"
+        ? "Marcar cambio"
+        : status === "updated"
+          ? "Limpiar estado"
+          : "Marcar edición";
+      button.disabled = !state.selectedProfessorId;
+      button.addEventListener("click", () => {
+        const next =
+          status === "" ? "editing" :
+          status === "editing" ? "updated" :
+          "";
+        if (next) {
+          state.professorActivity[state.selectedProfessorId][item.id] = next;
+        } else {
+          delete state.professorActivity[state.selectedProfessorId][item.id];
+        }
+        persistProfessorActivity();
+        renderProfessorStats();
+        renderMaterials();
+      });
     } else {
+      professorStatus.classList.add("hidden");
       const acquired = isAcquired(item.id);
       button.textContent = acquired ? "Adquirido" : "Marcar como adquirido";
       button.classList.toggle("acquired", acquired);
@@ -394,18 +495,28 @@ function bindEvents() {
   els.roleStudent.addEventListener("click", () => {
     state.role = "student";
     renderRoleState();
+    renderStudentStats();
+    renderProfessorStats();
     renderMaterials();
   });
 
   els.roleProfessor.addEventListener("click", () => {
     state.role = "professor";
     renderRoleState();
+    renderStudentStats();
+    renderProfessorStats();
     renderMaterials();
   });
 
   els.studentSelect.addEventListener("change", (event) => {
     state.selectedStudentId = event.target.value;
     renderStudentStats();
+    renderMaterials();
+  });
+
+  els.professorSelect.addEventListener("change", (event) => {
+    state.selectedProfessorId = event.target.value;
+    renderProfessorStats();
     renderMaterials();
   });
 
@@ -418,6 +529,7 @@ function bindEvents() {
       renderProgramStats();
       renderSubjectSummary();
       renderStudentStats();
+      renderProfessorStats();
       renderMaterials();
     });
   }
@@ -447,13 +559,17 @@ function bindEvents() {
     state.filters.progress = "pending";
     els.progressFilter.value = "pending";
     renderProgramStats();
+    renderStudentStats();
     renderMaterials();
   });
 
   els.resetFilters.addEventListener("click", () => {
     resetFilters();
     renderProgramStats();
+    renderSubjectSummary();
     renderMaterials();
+    renderStudentStats();
+    renderProfessorStats();
   });
 }
 
@@ -465,6 +581,7 @@ async function init() {
     renderSubjectSummary();
     renderRoleState();
     renderStudentStats();
+    renderProfessorStats();
     renderMaterials();
     bindEvents();
   } catch (error) {

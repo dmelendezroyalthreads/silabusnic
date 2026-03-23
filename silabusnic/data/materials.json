@@ -19,6 +19,23 @@
       "group": "3rd Year Odontology"
     }
   ],
+  "professors": [
+    {
+      "id": "professor-001",
+      "name": "Dra. Maria Guerrero",
+      "department": "Odontologia"
+    },
+    {
+      "id": "professor-002",
+      "name": "Dr. Carlos Melendez",
+      "department": "Odontologia"
+    },
+    {
+      "id": "professor-003",
+      "name": "Dra. Elena Paredes",
+      "department": "Odontologia"
+    }
+  ],
   "materials": [
     {
       "id": "260001",

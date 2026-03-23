@@ -65,17 +65,21 @@
       </summary>
       <div class="accordion-content">
         <div class="role-switch" role="tablist" aria-label="Selector de rol">
-          <button id="role-student" class="role-pill active" type="button" data-role="student">Vista estudiante</button>
+          <button id="role-student" class="role-pill" type="button" data-role="student">Vista estudiante</button>
           <button id="role-professor" class="role-pill" type="button" data-role="professor">Vista profesor</button>
         </div>
         <div class="login-grid">
-          <label class="login-card">
+          <label id="student-login-card" class="login-card hidden">
             <span>Ingreso de estudiante</span>
             <select id="student-select"></select>
           </label>
+          <label id="professor-login-card" class="login-card hidden">
+            <span>Ingreso de profesor</span>
+            <select id="professor-select"></select>
+          </label>
           <article class="login-card professor-card" id="role-summary">
             <span>Permisos actuales</span>
-            <p id="role-description">Los estudiantes pueden revisar y dar seguimiento a los artículos requeridos.</p>
+            <p id="role-description">Selecciona si deseas entrar como estudiante o como profesor.</p>
           </article>
         </div>
       </div>
@@ -84,6 +88,20 @@
     <section id="professor-workflow" class="sidebar-card hidden">
       <p class="section-kicker">Flujo de profesores</p>
       <h3>Gestión del catálogo</h3>
+      <div class="professor-stats">
+        <article>
+          <span id="professor-active-name">Sin profesor seleccionado</span>
+          <small>Profesor activo</small>
+        </article>
+        <article>
+          <span id="professor-editing-count">0</span>
+          <small>En edición</small>
+        </article>
+        <article>
+          <span id="professor-updated-count">0</span>
+          <small>Cambios marcados</small>
+        </article>
+      </div>
       <ul class="prompt-list">
         <li>Mantener el catálogo maestro en XLS para cada semestre y parcial.</li>
         <li>Subir imágenes para que los estudiantes puedan confirmar visualmente qué comprar.</li>
@@ -129,7 +147,7 @@
 
     <section class="sidebar-card progress-card">
       <p class="section-kicker">Checklist del estudiante</p>
-      <h3 id="student-name">Selecciona un estudiante</h3>
+      <h3 id="student-name">Selecciona carrera, año y estudiante</h3>
       <div class="progress-grid">
         <article>
           <span id="stat-acquired">0</span>
@@ -251,6 +269,7 @@
           <span class="tag-midterm"></span>
           <span class="tag-location"></span>
         </div>
+        <p class="professor-status hidden"></p>
         <p class="material-notes"></p>
         <div class="material-details"></div>
         <footer class="material-footer">

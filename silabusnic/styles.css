@@ -686,6 +686,32 @@ h1 {
   border: 1px solid rgba(17, 46, 87, 0.08);
 }
 
+.professor-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.professor-stats article {
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(17, 46, 87, 0.08);
+}
+
+.professor-stats span {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.professor-status {
+  margin: 0 0 8px;
+  color: var(--accent-dark);
+  font-size: 0.82rem;
+}
+
 .summary-list strong {
   display: block;
   margin-bottom: 4px;
