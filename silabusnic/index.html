@@ -66,29 +66,6 @@
       </aside>
     </section>
 
-    <section class="access-panel">
-      <div class="section-heading compact">
-        <div>
-          <p class="section-kicker">Access</p>
-          <h2>Choose a role</h2>
-        </div>
-      </div>
-      <div class="role-switch" role="tablist" aria-label="Role switcher">
-        <button id="role-student" class="role-pill active" type="button" data-role="student">Student View</button>
-        <button id="role-professor" class="role-pill" type="button" data-role="professor">Professor View</button>
-      </div>
-      <div class="login-grid">
-        <label class="login-card">
-          <span>Student login</span>
-          <select id="student-select"></select>
-        </label>
-        <article class="login-card professor-card" id="role-summary">
-          <span>Current permissions</span>
-          <p id="role-description">Students can review and track required items.</p>
-        </article>
-      </div>
-    </section>
-
     <section class="controls">
       <label>
         Search
@@ -128,6 +105,54 @@
       </label>
     </section>
 
+    <section class="checklist-panel">
+      <div class="checklist-access">
+        <div class="section-heading compact">
+          <div>
+            <p class="section-kicker">Access</p>
+            <h2>Student checklist</h2>
+          </div>
+        </div>
+        <div class="role-switch" role="tablist" aria-label="Role switcher">
+          <button id="role-student" class="role-pill active" type="button" data-role="student">Student View</button>
+          <button id="role-professor" class="role-pill" type="button" data-role="professor">Professor View</button>
+        </div>
+        <div class="login-grid">
+          <label class="login-card">
+            <span>Student login</span>
+            <select id="student-select"></select>
+          </label>
+          <article class="login-card professor-card" id="role-summary">
+            <span>Current permissions</span>
+            <p id="role-description">Students can review and track required items.</p>
+          </article>
+        </div>
+      </div>
+
+      <section class="sidebar-card progress-card">
+        <p class="section-kicker">Student checklist</p>
+        <h3 id="student-name">Select a student</h3>
+        <div class="progress-grid">
+          <article>
+            <span id="stat-acquired">0</span>
+            <small>Acquired</small>
+          </article>
+          <article>
+            <span id="stat-pending">0</span>
+            <small>Pending</small>
+          </article>
+          <article>
+            <span id="stat-semesters">0</span>
+            <small>Semesters</small>
+          </article>
+          <article>
+            <span id="stat-student-midterms">0</span>
+            <small>Tracked midterms</small>
+          </article>
+        </div>
+      </section>
+    </section>
+
     <section class="content-grid">
       <section class="materials-panel">
         <div class="section-heading">
@@ -142,29 +167,6 @@
       </section>
 
       <aside class="sidebar">
-        <section class="sidebar-card progress-card">
-          <p class="section-kicker">Student checklist</p>
-          <h3 id="student-name">Select a student</h3>
-          <div class="progress-grid">
-            <article>
-              <span id="stat-acquired">0</span>
-              <small>Acquired</small>
-            </article>
-            <article>
-              <span id="stat-pending">0</span>
-              <small>Pending</small>
-            </article>
-            <article>
-              <span id="stat-semesters">0</span>
-              <small>Semesters</small>
-            </article>
-            <article>
-              <span id="stat-student-midterms">0</span>
-              <small>Tracked midterms</small>
-            </article>
-          </div>
-        </section>
-
         <section class="sidebar-card">
           <p class="section-kicker">Professor workflow</p>
           <h3>Catalog management</h3>

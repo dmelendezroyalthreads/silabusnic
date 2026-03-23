@@ -41,6 +41,7 @@ a {
 
 .topbar,
 .hero,
+.checklist-panel,
 .content-grid,
 .controls,
 .login-grid {
@@ -147,7 +148,7 @@ a {
 
 .hero-copy,
 .hero-panel,
-.access-panel,
+.checklist-access,
 .materials-panel,
 .sidebar-card {
   background: var(--paper);
@@ -159,7 +160,7 @@ a {
 
 .hero-copy,
 .hero-panel,
-.access-panel,
+.checklist-access,
 .materials-panel,
 .sidebar-card {
   padding: 24px;
@@ -295,7 +296,13 @@ h1 {
   border: 1px solid rgba(17, 46, 87, 0.08);
 }
 
-.access-panel {
+.checklist-panel {
+  grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.95fr);
+  margin-bottom: 18px;
+  align-items: start;
+}
+
+.checklist-access {
   margin-bottom: 18px;
 }
 
@@ -498,6 +505,7 @@ h1 {
 @media (max-width: 920px) {
   .topbar,
   .hero,
+  .checklist-panel,
   .content-grid,
   .login-grid,
   .controls,
@@ -524,7 +532,7 @@ h1 {
 
   .hero-copy,
   .hero-panel,
-  .access-panel,
+  .checklist-access,
   .materials-panel,
   .sidebar-card {
     padding: 18px;
