@@ -19,6 +19,7 @@ const els = {
   roleStudent: document.querySelector("#role-student"),
   roleProfessor: document.querySelector("#role-professor"),
   roleDescription: document.querySelector("#role-description"),
+  professorWorkflow: document.querySelector("#professor-workflow"),
   studentSelect: document.querySelector("#student-select"),
   careerFilter: document.querySelector("#career-filter"),
   yearFilter: document.querySelector("#year-filter"),
@@ -115,12 +116,12 @@ function populateControls() {
   els.studentSelect.value = state.selectedStudentId;
 
   const materials = state.catalog.materials;
-  fillSelect(els.careerFilter, [...new Set(materials.map((item) => careerForItem(item)))].sort(), "All careers");
-  fillSelect(els.yearFilter, [...new Set(materials.map((item) => item.year))].sort(), "All years");
-  fillSelect(els.semesterFilter, [...new Set(materials.map((item) => item.semester))].sort(), "All semesters");
-  fillSelect(els.midtermFilter, [...new Set(materials.map((item) => item.midterm))].sort(), "All midterms");
-  fillSelect(els.subjectFilter, [...new Set(materials.map((item) => item.subject))].sort(), "All subjects");
-  fillSelect(els.typeFilter, [...new Set(materials.map((item) => item.type))].sort(), "All types");
+  fillSelect(els.careerFilter, [...new Set(materials.map((item) => careerForItem(item)))].sort(), "Todas las carreras");
+  fillSelect(els.yearFilter, [...new Set(materials.map((item) => item.year))].sort(), "Todos los años");
+  fillSelect(els.semesterFilter, [...new Set(materials.map((item) => item.semester))].sort(), "Todos los semestres");
+  fillSelect(els.midtermFilter, [...new Set(materials.map((item) => item.midterm))].sort(), "Todos los parciales");
+  fillSelect(els.subjectFilter, [...new Set(materials.map((item) => item.subject))].sort(), "Todas las asignaturas");
+  fillSelect(els.typeFilter, [...new Set(materials.map((item) => item.type))].sort(), "Todos los tipos");
 }
 
 function renderProgramStats() {
@@ -145,7 +146,7 @@ function renderSubjectSummary() {
   els.subjectSummary.innerHTML = "";
   for (const [subject, total] of [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8)) {
     const card = document.createElement("article");
-    card.innerHTML = `<strong>${subject}</strong><p>${total} listed materials</p>`;
+    card.innerHTML = `<strong>${subject}</strong><p>${total} materiales listados</p>`;
     els.subjectSummary.append(card);
   }
 }
@@ -187,9 +188,9 @@ function filteredMaterials() {
 
 function roleDescription() {
   if (state.role === "professor") {
-    return "Professors manage the XLS catalog, images, and material details for each semester and midterm.";
+    return "Los profesores administran el catálogo XLS, las imágenes y los detalles de materiales para cada semestre y parcial.";
   }
-  return "Students can review materials, filter by semester or midterm, and track what has already been acquired.";
+  return "Los estudiantes pueden revisar materiales, filtrar por semestre o parcial y llevar seguimiento de lo ya adquirido.";
 }
 
 function renderRoleState() {
@@ -197,6 +198,7 @@ function renderRoleState() {
   els.roleProfessor.classList.toggle("active", state.role === "professor");
   els.roleDescription.textContent = roleDescription();
   els.progressFilter.disabled = state.role === "professor";
+  els.professorWorkflow.classList.toggle("hidden", state.role !== "professor");
 }
 
 function renderStudentStats() {
@@ -223,24 +225,24 @@ function materialImage(item) {
 
 function materialDetails(item) {
   const details = [
-    `Cantidad aproximada: ${item.quantity || "N/A"}`,
-    `Presentación: ${item.presentation || "N/A"}`,
-    `Ubicación: ${item.location || "N/A"}`,
-    `Compra: ${item.purchaseFrequency || "N/A"}`,
+    `Cantidad aproximada: ${item.quantity || "N/D"}`,
+    `Presentacion: ${item.presentation || "N/D"}`,
+    `Ubicacion: ${item.location || "N/D"}`,
+    `Compra: ${item.purchaseFrequency || "N/D"}`,
   ];
   return details.map((detail) => `<span>${detail}</span>`).join("");
 }
 
 function activeFilterEntries() {
   const entries = [
-    ["Career", state.filters.career],
-    ["Year", state.filters.year],
-    ["Search", state.filters.query.trim()],
-    ["Semester", state.filters.semester],
-    ["Midterm", state.filters.midterm],
-    ["Subject", state.filters.subject],
-    ["Type", state.filters.type],
-    ["Progress", state.filters.progress],
+    ["Carrera", state.filters.career],
+    ["Ano", state.filters.year],
+    ["Busqueda", state.filters.query.trim()],
+    ["Semestre", state.filters.semester],
+    ["Parcial", state.filters.midterm],
+    ["Asignatura", state.filters.subject],
+    ["Tipo", state.filters.type],
+    ["Progreso", state.filters.progress],
   ];
 
   return entries.filter(([, value]) => value && value !== "all");
@@ -280,21 +282,21 @@ function renderMaterials() {
     node.querySelector(".material-type").textContent = item.type;
     node.querySelector(".material-title").textContent = item.name;
     node.querySelector(".material-meta").textContent =
-      `${item.subject} • ${item.ownership || "Individual"} • ${item.timing || "N/A"}`;
+      `${item.subject} • ${item.ownership || "Individual"} • ${item.timing || "N/D"}`;
     node.querySelector(".tag-semester").textContent = item.semester;
     node.querySelector(".tag-midterm").textContent = `Parcial ${item.midterm}`;
-    node.querySelector(".tag-location").textContent = item.location || "Ubicación pendiente";
+    node.querySelector(".tag-location").textContent = item.location || "Ubicacion pendiente";
     node.querySelector(".material-notes").textContent =
-      item.notes || item.otherSubjects || "No professor notes yet for this material.";
+      item.notes || item.otherSubjects || "Aun no hay observaciones del profesor para este material.";
     node.querySelector(".material-details").innerHTML = materialDetails(item);
 
     const button = node.querySelector(".toggle-acquired");
     if (state.role === "professor") {
-      button.textContent = "Professor can edit";
+      button.textContent = "Profesor puede editar";
       button.disabled = true;
     } else {
       const acquired = isAcquired(item.id);
-      button.textContent = acquired ? "Acquired" : "Mark acquired";
+      button.textContent = acquired ? "Adquirido" : "Marcar como adquirido";
       button.classList.toggle("acquired", acquired);
       button.addEventListener("click", () => {
         const set = getAcquiredSet();
@@ -312,7 +314,7 @@ function renderMaterials() {
     els.materialsList.append(node);
   }
 
-  els.resultsSummary.textContent = `${materials.length} material${materials.length === 1 ? "" : "s"} shown`;
+  els.resultsSummary.textContent = `${materials.length} material${materials.length === 1 ? "" : "es"} mostrados`;
   els.emptyState.classList.toggle("hidden", materials.length > 0);
 }
 
@@ -413,7 +415,7 @@ async function init() {
     renderMaterials();
     bindEvents();
   } catch (error) {
-    els.resultsSummary.textContent = "Unable to load materials catalog.";
+    els.resultsSummary.textContent = "No se pudo cargar el catalogo de materiales.";
     els.emptyState.textContent = error.message;
     els.emptyState.classList.remove("hidden");
   }

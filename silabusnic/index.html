@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -22,34 +22,35 @@
         </div>
         <div class="header-selects">
           <label>
-            Career
+            Carrera
             <select id="career-filter">
-              <option value="all">All careers</option>
+              <option value="all">Todas las carreras</option>
             </select>
           </label>
           <label>
-            Year
+            Año
             <select id="year-filter">
-              <option value="all">All years</option>
+              <option value="all">Todos los años</option>
             </select>
           </label>
         </div>
       </div>
       <div class="topbar-actions">
-        <a class="download-link" href="./data/MATERIALES%20ODONTOLOGIA.xlsx" download>Download XLS</a>
-        <button id="show-pending" class="primary" type="button">Show pending items</button>
-        <button id="reset-filters" class="secondary" type="button">Reset filters</button>
+        <a class="download-link" href="./data/MATERIALES%20ODONTOLOGIA.xlsx" download>Descargar XLS</a>
+        <button id="show-pending" class="primary" type="button">Ver pendientes</button>
+        <button id="reset-filters" class="secondary" type="button">Limpiar filtros</button>
       </div>
     </header>
 
     <details class="info-panel hidden">
       <summary class="info-toggle" aria-label="Show portal information">i</summary>
       <div class="hero-copy">
-        <p class="eyebrow">Mobile-First Student Materials Portal</p>
-        <h1>Track every instrument, supply, and equipment item for the semester.</h1>
+        <p class="eyebrow">Portal de materiales para estudiantes</p>
+        <h1>Da seguimiento a cada instrumento, material y equipo del semestre.</h1>
         <p class="hero-text">
-          Professors maintain the official materials list. Students can log in, filter by semester or
-          midterm, review item images, and track what is still pending versus already acquired.
+          Los profesores mantienen la lista oficial de materiales. Los estudiantes pueden ingresar,
+          filtrar por semestre o parcial, revisar imágenes de cada artículo y marcar lo que aún les falta
+          o ya adquirieron.
         </p>
       </div>
     </details>
@@ -58,35 +59,35 @@
       <summary class="accordion-toggle">
         <span class="accordion-icon" aria-hidden="true">🔒</span>
         <span class="accordion-copy">
-          <small class="panel-label">Access</small>
-          <strong>Student and professor access</strong>
+          <small class="panel-label">Acceso</small>
+          <strong>Acceso para estudiantes y profesores</strong>
         </span>
       </summary>
       <div class="accordion-content">
-        <div class="role-switch" role="tablist" aria-label="Role switcher">
-          <button id="role-student" class="role-pill active" type="button" data-role="student">Student View</button>
-          <button id="role-professor" class="role-pill" type="button" data-role="professor">Professor View</button>
+        <div class="role-switch" role="tablist" aria-label="Selector de rol">
+          <button id="role-student" class="role-pill active" type="button" data-role="student">Vista estudiante</button>
+          <button id="role-professor" class="role-pill" type="button" data-role="professor">Vista profesor</button>
         </div>
         <div class="login-grid">
           <label class="login-card">
-            <span>Student login</span>
+            <span>Ingreso de estudiante</span>
             <select id="student-select"></select>
           </label>
           <article class="login-card professor-card" id="role-summary">
-            <span>Current permissions</span>
-            <p id="role-description">Students can review and track required items.</p>
+            <span>Permisos actuales</span>
+            <p id="role-description">Los estudiantes pueden revisar y dar seguimiento a los artículos requeridos.</p>
           </article>
         </div>
       </div>
     </details>
 
     <section id="professor-workflow" class="sidebar-card hidden">
-      <p class="section-kicker">Professor workflow</p>
-      <h3>Catalog management</h3>
+      <p class="section-kicker">Flujo de profesores</p>
+      <h3>Gestión del catálogo</h3>
       <ul class="prompt-list">
-        <li>Maintain the master XLS catalog for each semester and midterm.</li>
-        <li>Upload item images so students can visually confirm what to buy.</li>
-        <li>Edit quantities, purchase frequency, and notes for each material.</li>
+        <li>Mantener el catálogo maestro en XLS para cada semestre y parcial.</li>
+        <li>Subir imágenes para que los estudiantes puedan confirmar visualmente qué comprar.</li>
+        <li>Editar cantidades, frecuencia de compra y observaciones de cada material.</li>
       </ul>
     </section>
 
@@ -127,24 +128,24 @@
     </details>
 
     <section class="sidebar-card progress-card">
-      <p class="section-kicker">Student checklist</p>
-      <h3 id="student-name">Select a student</h3>
+      <p class="section-kicker">Checklist del estudiante</p>
+      <h3 id="student-name">Selecciona un estudiante</h3>
       <div class="progress-grid">
         <article>
           <span id="stat-acquired">0</span>
-          <small>Acquired</small>
+          <small>Adquiridos</small>
         </article>
         <article>
           <span id="stat-pending">0</span>
-          <small>Pending</small>
+          <small>Pendientes</small>
         </article>
         <article>
           <span id="stat-semesters">0</span>
-          <small>Semesters</small>
+          <small>Semestres</small>
         </article>
         <article>
           <span id="stat-student-midterms">0</span>
-          <small>Tracked midterms</small>
+          <small>Parciales seguidos</small>
         </article>
       </div>
     </section>
@@ -153,46 +154,46 @@
       <summary class="accordion-toggle">
         <span class="accordion-icon" aria-hidden="true">⌕</span>
         <span class="accordion-copy">
-          <small class="panel-label">Filters</small>
-          <strong>Search and refine materials</strong>
+          <small class="panel-label">Filtros</small>
+          <strong>Buscar y refinar materiales</strong>
         </span>
       </summary>
       <div class="accordion-content">
         <section class="controls">
           <label>
-            Search
-            <input id="search-input" type="search" placeholder="Search material, subject, presentation, or notes" />
+            Buscar
+            <input id="search-input" type="search" placeholder="Buscar material, asignatura, presentación u observaciones" />
           </label>
           <label>
-            Semester
+            Semestre
             <select id="semester-filter">
-              <option value="all">All semesters</option>
+              <option value="all">Todos los semestres</option>
             </select>
           </label>
           <label>
-            Midterm
+            Parcial
             <select id="midterm-filter">
-              <option value="all">All midterms</option>
+              <option value="all">Todos los parciales</option>
             </select>
           </label>
           <label>
-            Subject
+            Asignatura
             <select id="subject-filter">
-              <option value="all">All subjects</option>
+              <option value="all">Todas las asignaturas</option>
             </select>
           </label>
           <label>
-            Type
+            Tipo
             <select id="type-filter">
-              <option value="all">All types</option>
+              <option value="all">Todos los tipos</option>
             </select>
           </label>
           <label>
-            Student progress
+            Progreso del estudiante
             <select id="progress-filter">
-              <option value="all">All items</option>
-              <option value="pending">Still needed</option>
-              <option value="acquired">Already acquired</option>
+              <option value="all">Todos los artículos</option>
+              <option value="pending">Aún faltan</option>
+              <option value="acquired">Ya adquiridos</option>
             </select>
           </label>
         </section>
@@ -203,24 +204,34 @@
       <section class="materials-panel">
         <div class="section-heading">
           <div>
-            <p class="section-kicker">Materials list</p>
-            <h2 id="program-title">3rd Year Odontology</h2>
+            <p class="section-kicker">Lista de materiales</p>
+            <h2 id="program-title">Odontología 3ro</h2>
           </div>
-          <p id="results-summary" class="results-summary">Loading materials...</p>
+          <p id="results-summary" class="results-summary">Cargando materiales...</p>
         </div>
         <div id="active-filters" class="active-filters hidden"></div>
         <div id="materials-list" class="materials-list"></div>
-        <p id="empty-state" class="empty-state hidden">No materials match the current filters.</p>
+        <p id="empty-state" class="empty-state hidden">No hay materiales que coincidan con los filtros actuales.</p>
       </section>
 
       <aside class="sidebar">
         <section class="sidebar-card">
-          <p class="section-kicker">Current data</p>
-          <h3>Workbook summary</h3>
+          <p class="section-kicker">Datos actuales</p>
+          <h3>Resumen del archivo</h3>
           <div id="subject-summary" class="summary-list"></div>
         </section>
       </aside>
     </section>
+
+    <footer class="page-footer">
+      <label class="language-selector">
+        <span>Idioma</span>
+        <select id="language-selector">
+          <option value="es" selected>Espanol</option>
+          <option value="en">English</option>
+        </select>
+      </label>
+    </footer>
   </main>
 
   <template id="material-template">
@@ -243,7 +254,7 @@
         <p class="material-notes"></p>
         <div class="material-details"></div>
         <footer class="material-footer">
-          <button class="toggle-acquired" type="button">Mark acquired</button>
+          <button class="toggle-acquired" type="button">Marcar como adquirido</button>
         </footer>
       </div>
     </article>
