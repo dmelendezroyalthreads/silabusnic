@@ -261,8 +261,8 @@ function renderRoleState() {
   els.roleStudent.disabled = !readyForRoleSelection;
   els.roleProfessor.disabled = !readyForRoleSelection;
   els.roleDescription.textContent = readyForRoleSelection
-    ? roleDescription()
-    : "Primero selecciona una carrera y un año para habilitar el acceso de estudiante o profesor.";
+    ? `Paso 3: ${roleDescription()}`
+    : "Primero completa el Paso 1 (Carrera) y el Paso 2 (Año) para habilitar el Paso 3.";
   els.progressFilter.disabled = state.role !== "student";
   els.progressCard.classList.toggle("hidden", state.role !== "student");
   els.studentLoginCard.classList.toggle("hidden", state.role !== "student");
