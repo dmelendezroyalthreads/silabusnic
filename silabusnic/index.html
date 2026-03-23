@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Silabusnic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">College Materials Discussion Hub</p>
+        <h1>Keep every syllabus, reading packet, and study thread in one calm place.</h1>
+        <p class="hero-text">
+          Silabusnic is a starter web app for students and faculty to organize course materials,
+          discuss assignments, and spot unanswered questions before they become blockers.
+        </p>
+        <div class="hero-actions">
+          <button id="focus-unanswered" class="primary" type="button">View unanswered topics</button>
+          <button id="reset-filters" class="secondary" type="button">Show all discussions</button>
+        </div>
+      </div>
+
+      <aside class="hero-panel">
+        <p class="panel-label">This week</p>
+        <div class="hero-metric">
+          <span id="stat-total">0</span>
+          <small>Active threads</small>
+        </div>
+        <div class="hero-grid">
+          <article>
+            <span id="stat-open">0</span>
+            <small>Open</small>
+          </article>
+          <article>
+            <span id="stat-resources">0</span>
+            <small>Shared resources</small>
+          </article>
+          <article>
+            <span id="stat-courses">0</span>
+            <small>Courses</small>
+          </article>
+          <article>
+            <span id="stat-unanswered">0</span>
+            <small>Need replies</small>
+          </article>
+        </div>
+      </aside>
+    </section>
+
+    <section class="controls">
+      <label>
+        Search
+        <input id="search-input" type="search" placeholder="Search course, topic, tags, or author" />
+      </label>
+      <label>
+        Course
+        <select id="course-filter">
+          <option value="all">All courses</option>
+        </select>
+      </label>
+      <label>
+        Status
+        <select id="status-filter">
+          <option value="all">All statuses</option>
+          <option value="open">Open</option>
+          <option value="answered">Answered</option>
+          <option value="resource">Resource shared</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="content-grid">
+      <section class="discussion-panel">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Discussion board</p>
+            <h2>Recent materials conversations</h2>
+          </div>
+          <p id="results-summary" class="results-summary">Loading discussions...</p>
+        </div>
+        <div id="discussion-list" class="discussion-list"></div>
+        <p id="empty-state" class="empty-state hidden">No discussions match the current filters.</p>
+      </section>
+
+      <aside class="sidebar">
+        <section class="sidebar-card">
+          <p class="section-kicker">Courses</p>
+          <h3>Material activity</h3>
+          <div id="course-summary" class="course-summary"></div>
+        </section>
+
+        <section class="sidebar-card">
+          <p class="section-kicker">Prompt ideas</p>
+          <h3>Useful discussion starters</h3>
+          <ul class="prompt-list">
+            <li>Which readings are required for the midterm, and which are optional?</li>
+            <li>Can anyone share notes on citation style changes from last lecture?</li>
+            <li>What chapter examples best explain the upcoming problem set?</li>
+          </ul>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <template id="discussion-template">
+    <article class="discussion-card">
+      <div class="discussion-topline">
+        <span class="course-pill"></span>
+        <span class="status-pill"></span>
+      </div>
+      <h3 class="discussion-title"></h3>
+      <p class="discussion-snippet"></p>
+      <div class="tag-row"></div>
+      <footer class="discussion-meta">
+        <span class="discussion-author"></span>
+        <span class="discussion-replies"></span>
+        <span class="discussion-updated"></span>
+      </footer>
+    </article>
+  </template>
+
+  <script src="./app.js"></script>
+</body>
+</html>

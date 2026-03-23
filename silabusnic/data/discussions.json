@@ -1,0 +1,64 @@
+{
+  "discussions": [
+    {
+      "course": "BIO 201",
+      "title": "Which lab manual pages are actually required for week four?",
+      "snippet": "The syllabus lists two sections, but the professor only mentioned one during class. Trying to avoid printing the wrong packet.",
+      "author": "Maya R.",
+      "status": "open",
+      "replies": 0,
+      "updated": "2 hours ago",
+      "tags": ["lab", "syllabus", "week-4"]
+    },
+    {
+      "course": "HIST 330",
+      "title": "Shared OCR-friendly scan of the archive reading",
+      "snippet": "Uploading a clearer copy of the archival packet because the LMS version was hard to annotate on mobile.",
+      "author": "Jon P.",
+      "status": "resource",
+      "replies": 6,
+      "updated": "5 hours ago",
+      "tags": ["scan", "accessibility", "reading-pack"]
+    },
+    {
+      "course": "CS 145",
+      "title": "Do the lecture slides replace chapter 3 for the quiz?",
+      "snippet": "The instructor said the slides cover the same material, but I want to confirm whether both sources are fair game.",
+      "author": "Nina T.",
+      "status": "answered",
+      "replies": 4,
+      "updated": "Yesterday",
+      "tags": ["quiz", "lecture-slides", "chapter-3"]
+    },
+    {
+      "course": "ENG 210",
+      "title": "Citation guide for the comparative essay",
+      "snippet": "Posting the updated MLA handout from office hours for anyone still using the older sheet from the folder.",
+      "author": "Prof. Allen",
+      "status": "resource",
+      "replies": 3,
+      "updated": "Yesterday",
+      "tags": ["mla", "essay", "handout"]
+    },
+    {
+      "course": "ECON 102",
+      "title": "Can someone explain which problem set examples map to section 5.2?",
+      "snippet": "I found the textbook explanation thin and would love pointers to the exact examples we should review.",
+      "author": "Aly J.",
+      "status": "open",
+      "replies": 1,
+      "updated": "1 day ago",
+      "tags": ["problem-set", "section-5-2", "study-help"]
+    },
+    {
+      "course": "BIO 201",
+      "title": "Annotated study guide for the cell transport unit",
+      "snippet": "A cleaned-up version of the shared study guide with color-coded definitions and diagrams from recitation.",
+      "author": "Seth K.",
+      "status": "answered",
+      "replies": 8,
+      "updated": "2 days ago",
+      "tags": ["study-guide", "cell-transport", "exam-1"]
+    }
+  ]
+}

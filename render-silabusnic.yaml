@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: silabusnic
+    runtime: static
+    buildCommand: echo "Static site ready"
+    staticPublishPath: ./silabusnic
