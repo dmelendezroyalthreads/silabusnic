@@ -26,7 +26,7 @@
       </div>
     </header>
 
-    <details class="info-panel">
+    <details class="info-panel hidden">
       <summary class="info-toggle" aria-label="Show portal information">i</summary>
       <div class="hero-copy">
         <p class="eyebrow">Mobile-First Student Materials Portal</p>
@@ -38,44 +38,31 @@
       </div>
     </details>
 
-    <section class="controls">
-      <label>
-        Search
-        <input id="search-input" type="search" placeholder="Search material, subject, presentation, or notes" />
-      </label>
-      <label>
-        Semester
-        <select id="semester-filter">
-          <option value="all">All semesters</option>
-        </select>
-      </label>
-      <label>
-        Midterm
-        <select id="midterm-filter">
-          <option value="all">All midterms</option>
-        </select>
-      </label>
-      <label>
-        Subject
-        <select id="subject-filter">
-          <option value="all">All subjects</option>
-        </select>
-      </label>
-      <label>
-        Type
-        <select id="type-filter">
-          <option value="all">All types</option>
-        </select>
-      </label>
-      <label>
-        Student progress
-        <select id="progress-filter">
-          <option value="all">All items</option>
-          <option value="pending">Still needed</option>
-          <option value="acquired">Already acquired</option>
-        </select>
-      </label>
-    </section>
+    <details class="accordion-panel access-panel" open>
+      <summary class="accordion-toggle">
+        <span class="accordion-icon" aria-hidden="true">🔒</span>
+        <span class="accordion-copy">
+          <small class="panel-label">Access</small>
+          <strong>Student and professor access</strong>
+        </span>
+      </summary>
+      <div class="accordion-content">
+        <div class="role-switch" role="tablist" aria-label="Role switcher">
+          <button id="role-student" class="role-pill active" type="button" data-role="student">Student View</button>
+          <button id="role-professor" class="role-pill" type="button" data-role="professor">Professor View</button>
+        </div>
+        <div class="login-grid">
+          <label class="login-card">
+            <span>Student login</span>
+            <select id="student-select"></select>
+          </label>
+          <article class="login-card professor-card" id="role-summary">
+            <span>Current permissions</span>
+            <p id="role-description">Students can review and track required items.</p>
+          </article>
+        </div>
+      </div>
+    </details>
 
     <details class="hero-panel snapshot-panel">
       <summary class="snapshot-toggle">
@@ -113,53 +100,78 @@
       </div>
     </details>
 
-    <section class="checklist-panel">
-      <div class="checklist-access">
-        <div class="section-heading compact">
-          <div>
-            <p class="section-kicker">Access</p>
-            <h2>Student checklist</h2>
-          </div>
-        </div>
-        <div class="role-switch" role="tablist" aria-label="Role switcher">
-          <button id="role-student" class="role-pill active" type="button" data-role="student">Student View</button>
-          <button id="role-professor" class="role-pill" type="button" data-role="professor">Professor View</button>
-        </div>
-        <div class="login-grid">
-          <label class="login-card">
-            <span>Student login</span>
-            <select id="student-select"></select>
-          </label>
-          <article class="login-card professor-card" id="role-summary">
-            <span>Current permissions</span>
-            <p id="role-description">Students can review and track required items.</p>
-          </article>
-        </div>
+    <section class="sidebar-card progress-card">
+      <p class="section-kicker">Student checklist</p>
+      <h3 id="student-name">Select a student</h3>
+      <div class="progress-grid">
+        <article>
+          <span id="stat-acquired">0</span>
+          <small>Acquired</small>
+        </article>
+        <article>
+          <span id="stat-pending">0</span>
+          <small>Pending</small>
+        </article>
+        <article>
+          <span id="stat-semesters">0</span>
+          <small>Semesters</small>
+        </article>
+        <article>
+          <span id="stat-student-midterms">0</span>
+          <small>Tracked midterms</small>
+        </article>
       </div>
-
-      <section class="sidebar-card progress-card">
-        <p class="section-kicker">Student checklist</p>
-        <h3 id="student-name">Select a student</h3>
-        <div class="progress-grid">
-          <article>
-            <span id="stat-acquired">0</span>
-            <small>Acquired</small>
-          </article>
-          <article>
-            <span id="stat-pending">0</span>
-            <small>Pending</small>
-          </article>
-          <article>
-            <span id="stat-semesters">0</span>
-            <small>Semesters</small>
-          </article>
-          <article>
-            <span id="stat-student-midterms">0</span>
-            <small>Tracked midterms</small>
-          </article>
-        </div>
-      </section>
     </section>
+
+    <details class="accordion-panel filters-panel" open>
+      <summary class="accordion-toggle">
+        <span class="accordion-icon" aria-hidden="true">⌕</span>
+        <span class="accordion-copy">
+          <small class="panel-label">Filters</small>
+          <strong>Search and refine materials</strong>
+        </span>
+      </summary>
+      <div class="accordion-content">
+        <section class="controls">
+          <label>
+            Search
+            <input id="search-input" type="search" placeholder="Search material, subject, presentation, or notes" />
+          </label>
+          <label>
+            Semester
+            <select id="semester-filter">
+              <option value="all">All semesters</option>
+            </select>
+          </label>
+          <label>
+            Midterm
+            <select id="midterm-filter">
+              <option value="all">All midterms</option>
+            </select>
+          </label>
+          <label>
+            Subject
+            <select id="subject-filter">
+              <option value="all">All subjects</option>
+            </select>
+          </label>
+          <label>
+            Type
+            <select id="type-filter">
+              <option value="all">All types</option>
+            </select>
+          </label>
+          <label>
+            Student progress
+            <select id="progress-filter">
+              <option value="all">All items</option>
+              <option value="pending">Still needed</option>
+              <option value="acquired">Already acquired</option>
+            </select>
+          </label>
+        </section>
+      </div>
+    </details>
 
     <section class="content-grid">
       <section class="materials-panel">
@@ -212,8 +224,8 @@
           <span class="tag-location"></span>
         </div>
         <p class="material-notes"></p>
+        <div class="material-details"></div>
         <footer class="material-footer">
-          <div class="material-details"></div>
           <button class="toggle-acquired" type="button">Mark acquired</button>
         </footer>
       </div>
