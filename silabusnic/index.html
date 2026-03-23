@@ -19,7 +19,11 @@
           <p class="brand-tagline">3rd Year Odontology materials and equipment portal</p>
         </div>
       </div>
-      <a class="download-link" href="./data/MATERIALES%20ODONTOLOGIA.xlsx" download>Download XLS</a>
+      <div class="topbar-actions">
+        <a class="download-link" href="./data/MATERIALES%20ODONTOLOGIA.xlsx" download>Download XLS</a>
+        <button id="show-pending" class="primary" type="button">Show pending items</button>
+        <button id="reset-filters" class="secondary" type="button">Reset filters</button>
+      </div>
     </header>
 
     <section class="hero">
@@ -30,40 +34,43 @@
           Professors maintain the official materials list. Students can log in, filter by semester or
           midterm, review item images, and track what is still pending versus already acquired.
         </p>
-        <div class="hero-actions">
-          <button id="show-pending" class="primary" type="button">Show pending items</button>
-          <button id="reset-filters" class="secondary" type="button">Reset filters</button>
-        </div>
       </div>
 
-      <aside class="hero-panel">
-        <div class="hero-logo-frame">
-          <img src="./assets/logo.png" alt="Silabusnic crest" />
+      <details class="hero-panel snapshot-panel">
+        <summary class="snapshot-toggle">
+          <span>
+            <small class="panel-label">Program snapshot</small>
+            <strong>View program stats</strong>
+          </span>
+        </summary>
+        <div class="snapshot-content">
+          <div class="hero-logo-frame">
+            <img src="./assets/logo.png" alt="Silabusnic crest" />
+          </div>
+          <div class="hero-metric">
+            <span id="stat-total">0</span>
+            <small>Total materials</small>
+          </div>
+          <div class="hero-grid">
+            <article>
+              <span id="stat-subjects">0</span>
+              <small>Subjects</small>
+            </article>
+            <article>
+              <span id="stat-midterms">0</span>
+              <small>Midterms</small>
+            </article>
+            <article>
+              <span id="stat-equipment">0</span>
+              <small>Equipment items</small>
+            </article>
+            <article>
+              <span id="stat-recurring">0</span>
+              <small>Recurring items</small>
+            </article>
+          </div>
         </div>
-        <p class="panel-label">Program snapshot</p>
-        <div class="hero-metric">
-          <span id="stat-total">0</span>
-          <small>Total materials</small>
-        </div>
-        <div class="hero-grid">
-          <article>
-            <span id="stat-subjects">0</span>
-            <small>Subjects</small>
-          </article>
-          <article>
-            <span id="stat-midterms">0</span>
-            <small>Midterms</small>
-          </article>
-          <article>
-            <span id="stat-equipment">0</span>
-            <small>Equipment items</small>
-          </article>
-          <article>
-            <span id="stat-recurring">0</span>
-            <small>Recurring items</small>
-          </article>
-        </div>
-      </aside>
+      </details>
     </section>
 
     <section class="controls">
