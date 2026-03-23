@@ -255,9 +255,14 @@ function roleDescription() {
 }
 
 function renderRoleState() {
+  const readyForRoleSelection = hasRequiredHeaderSelection();
   els.roleStudent.classList.toggle("active", state.role === "student");
   els.roleProfessor.classList.toggle("active", state.role === "professor");
-  els.roleDescription.textContent = roleDescription();
+  els.roleStudent.disabled = !readyForRoleSelection;
+  els.roleProfessor.disabled = !readyForRoleSelection;
+  els.roleDescription.textContent = readyForRoleSelection
+    ? roleDescription()
+    : "Primero selecciona una carrera y un año para habilitar el acceso de estudiante o profesor.";
   els.progressFilter.disabled = state.role !== "student";
   els.progressCard.classList.toggle("hidden", state.role !== "student");
   els.studentLoginCard.classList.toggle("hidden", state.role !== "student");
@@ -526,8 +531,12 @@ function bindEvents() {
   ]) {
     element.addEventListener("change", (event) => {
       state.filters[key] = event.target.value;
+      if (!hasRequiredHeaderSelection()) {
+        state.role = "";
+      }
       renderProgramStats();
       renderSubjectSummary();
+      renderRoleState();
       renderStudentStats();
       renderProfessorStats();
       renderMaterials();
