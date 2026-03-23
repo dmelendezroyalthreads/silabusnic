@@ -3,6 +3,8 @@ const state = {
   selectedStudentId: "",
   catalog: null,
   filters: {
+    career: "all",
+    year: "all",
     query: "",
     semester: "all",
     midterm: "all",
@@ -18,6 +20,8 @@ const els = {
   roleProfessor: document.querySelector("#role-professor"),
   roleDescription: document.querySelector("#role-description"),
   studentSelect: document.querySelector("#student-select"),
+  careerFilter: document.querySelector("#career-filter"),
+  yearFilter: document.querySelector("#year-filter"),
   searchInput: document.querySelector("#search-input"),
   semesterFilter: document.querySelector("#semester-filter"),
   midtermFilter: document.querySelector("#midterm-filter"),
@@ -50,6 +54,12 @@ function storageKey(studentId) {
 
 function getSelectedStudent() {
   return state.catalog.students.find((student) => student.id === state.selectedStudentId) || state.catalog.students[0];
+}
+
+function careerForItem(item) {
+  if (item.career) return item.career;
+  if (state.catalog.career) return state.catalog.career;
+  return state.catalog.program.replace(/^\s*\d+(st|nd|rd|th)?\s+Year\s+/i, "").trim();
 }
 
 function getAcquiredSet(studentId = state.selectedStudentId) {
@@ -104,6 +114,8 @@ function populateControls() {
   els.studentSelect.value = state.selectedStudentId;
 
   const materials = state.catalog.materials;
+  fillSelect(els.careerFilter, [...new Set(materials.map((item) => careerForItem(item)))].sort(), "All careers");
+  fillSelect(els.yearFilter, [...new Set(materials.map((item) => item.year))].sort(), "All years");
   fillSelect(els.semesterFilter, [...new Set(materials.map((item) => item.semester))].sort(), "All semesters");
   fillSelect(els.midtermFilter, [...new Set(materials.map((item) => item.midterm))].sort(), "All midterms");
   fillSelect(els.subjectFilter, [...new Set(materials.map((item) => item.subject))].sort(), "All subjects");
@@ -112,7 +124,9 @@ function populateControls() {
 
 function renderProgramStats() {
   const materials = state.catalog.materials;
-  els.programTitle.textContent = state.catalog.program;
+  const careerLabel = state.filters.career === "all" ? careerForItem(materials[0]) : state.filters.career;
+  const yearLabel = state.filters.year === "all" ? materials[0]?.year || "" : state.filters.year;
+  els.programTitle.textContent = `${careerLabel} ${yearLabel}`.trim();
   els.statTotal.textContent = String(materials.length);
   els.statSubjects.textContent = String(new Set(materials.map((item) => item.subject)).size);
   els.statMidterms.textContent = String(new Set(materials.map((item) => item.midterm)).size);
@@ -149,6 +163,8 @@ function matchesFilters(item) {
   ].join(" ").toLowerCase();
 
   const matchesQuery = !query || haystack.includes(query);
+  const matchesCareer = state.filters.career === "all" || careerForItem(item) === state.filters.career;
+  const matchesYear = state.filters.year === "all" || item.year === state.filters.year;
   const matchesSemester = state.filters.semester === "all" || item.semester === state.filters.semester;
   const matchesMidterm = state.filters.midterm === "all" || item.midterm === state.filters.midterm;
   const matchesSubject = state.filters.subject === "all" || item.subject === state.filters.subject;
@@ -161,7 +177,7 @@ function matchesFilters(item) {
     matchesProgress = !isAcquired(item.id);
   }
 
-  return matchesQuery && matchesSemester && matchesMidterm && matchesSubject && matchesType && matchesProgress;
+  return matchesQuery && matchesCareer && matchesYear && matchesSemester && matchesMidterm && matchesSubject && matchesType && matchesProgress;
 }
 
 function filteredMaterials() {
@@ -266,6 +282,8 @@ function renderMaterials() {
 
 function resetFilters() {
   state.filters = {
+    career: "all",
+    year: "all",
     query: "",
     semester: "all",
     midterm: "all",
@@ -273,6 +291,8 @@ function resetFilters() {
     type: "all",
     progress: "all",
   };
+  els.careerFilter.value = "all";
+  els.yearFilter.value = "all";
   els.searchInput.value = "";
   els.semesterFilter.value = "all";
   els.midtermFilter.value = "all";
@@ -300,6 +320,17 @@ function bindEvents() {
     renderMaterials();
   });
 
+  for (const [key, element] of [
+    ["career", els.careerFilter],
+    ["year", els.yearFilter],
+  ]) {
+    element.addEventListener("change", (event) => {
+      state.filters[key] = event.target.value;
+      renderProgramStats();
+      renderMaterials();
+    });
+  }
+
   els.searchInput.addEventListener("input", (event) => {
     state.filters.query = event.target.value;
     renderMaterials();
@@ -314,6 +345,7 @@ function bindEvents() {
   ]) {
     element.addEventListener("change", (event) => {
       state.filters[key] = event.target.value;
+      renderProgramStats();
       renderMaterials();
     });
   }
@@ -323,11 +355,13 @@ function bindEvents() {
     renderRoleState();
     state.filters.progress = "pending";
     els.progressFilter.value = "pending";
+    renderProgramStats();
     renderMaterials();
   });
 
   els.resetFilters.addEventListener("click", () => {
     resetFilters();
+    renderProgramStats();
     renderMaterials();
   });
 }

@@ -53,6 +53,13 @@ a {
   margin-bottom: 18px;
 }
 
+.topbar-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+}
+
 .topbar-actions {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -84,6 +91,28 @@ a {
 .brand-copy {
   display: grid;
   gap: 4px;
+}
+
+.header-selects {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.header-selects label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.header-selects select {
+  width: 100%;
+  background: rgba(255, 252, 247, 0.94);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px 14px;
+  color: var(--ink);
 }
 
 .brand-name,
@@ -484,6 +513,28 @@ h1 {
   color: var(--ink);
 }
 
+.controls label:first-child {
+  grid-column: 1 / -1;
+}
+
+.controls label:first-child input {
+  background: #fffdf8;
+  border: 2px solid rgba(184, 137, 45, 0.45);
+  box-shadow: 0 10px 24px rgba(17, 46, 87, 0.08);
+  padding: 16px 18px;
+  font-size: 1rem;
+}
+
+.controls label:first-child input::placeholder {
+  color: rgba(93, 103, 120, 0.9);
+}
+
+.controls label:first-child input:focus {
+  outline: none;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 4px rgba(17, 46, 87, 0.12);
+}
+
 .content-grid {
   grid-template-columns: minmax(0, 1fr) minmax(260px, 0.34fr);
   align-items: start;
@@ -493,6 +544,10 @@ h1 {
 .summary-list {
   display: grid;
   gap: 14px;
+}
+
+.materials-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .material-card {
@@ -630,6 +685,10 @@ h1 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .topbar-main {
+    grid-template-columns: 1fr;
+  }
+
   .material-footer,
   .section-heading {
     align-items: start;
@@ -662,6 +721,10 @@ h1 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .header-selects {
+    grid-template-columns: 1fr 1fr;
+  }
+
   .brand-logo {
     width: 58px;
     height: 58px;
@@ -681,5 +744,48 @@ h1 {
   .hero-grid,
   .progress-grid {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .controls label:first-child input {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+  }
+
+  .materials-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .material-card {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .material-image-wrap {
+    width: 60px;
+    height: 60px;
+  }
+
+  .material-title {
+    font-size: 0.92rem;
+  }
+
+  .material-meta,
+  .material-notes,
+  .material-details {
+    font-size: 0.82rem;
+  }
+
+  .course-pill,
+  .status-pill,
+  .tag-row span {
+    font-size: 0.72rem;
+    padding: 6px 8px;
+  }
+
+  .toggle-acquired {
+    width: 100%;
+    font-size: 0.76rem;
+    padding: 9px 8px;
   }
 }
