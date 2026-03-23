@@ -16,22 +16,23 @@
         <img class="brand-logo" src="./assets/logo.png" alt="Silabusnic logo" />
         <div class="brand-copy">
           <p class="brand-name">Silabusnic</p>
-          <p class="brand-tagline">Course materials, discussion, and academic collaboration</p>
+          <p class="brand-tagline">3rd Year Odontology materials and equipment portal</p>
         </div>
       </div>
+      <a class="download-link" href="./data/MATERIALES%20ODONTOLOGIA.xlsx" download>Download XLS</a>
     </header>
 
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">Scholarly Exchange Platform</p>
-        <h1>Keep every syllabus, reading packet, and study thread in one calm place.</h1>
+        <p class="eyebrow">Mobile-First Student Materials Portal</p>
+        <h1>Track every instrument, supply, and equipment item for the semester.</h1>
         <p class="hero-text">
-          Silabusnic is a starter web app for students and faculty to organize course materials,
-          discuss assignments, and spot unanswered questions before they become blockers.
+          Professors maintain the official materials list. Students can log in, filter by semester or
+          midterm, review item images, and track what is still pending versus already acquired.
         </p>
         <div class="hero-actions">
-          <button id="focus-unanswered" class="primary" type="button">View unanswered topics</button>
-          <button id="reset-filters" class="secondary" type="button">Show all discussions</button>
+          <button id="show-pending" class="primary" type="button">Show pending items</button>
+          <button id="reset-filters" class="secondary" type="button">Reset filters</button>
         </div>
       </div>
 
@@ -39,101 +40,173 @@
         <div class="hero-logo-frame">
           <img src="./assets/logo.png" alt="Silabusnic crest" />
         </div>
-        <p class="panel-label">This week</p>
+        <p class="panel-label">Program snapshot</p>
         <div class="hero-metric">
           <span id="stat-total">0</span>
-          <small>Active threads</small>
+          <small>Total materials</small>
         </div>
         <div class="hero-grid">
           <article>
-            <span id="stat-open">0</span>
-            <small>Open</small>
+            <span id="stat-subjects">0</span>
+            <small>Subjects</small>
           </article>
           <article>
-            <span id="stat-resources">0</span>
-            <small>Shared resources</small>
+            <span id="stat-midterms">0</span>
+            <small>Midterms</small>
           </article>
           <article>
-            <span id="stat-courses">0</span>
-            <small>Courses</small>
+            <span id="stat-equipment">0</span>
+            <small>Equipment items</small>
           </article>
           <article>
-            <span id="stat-unanswered">0</span>
-            <small>Need replies</small>
+            <span id="stat-recurring">0</span>
+            <small>Recurring items</small>
           </article>
         </div>
       </aside>
+    </section>
+
+    <section class="access-panel">
+      <div class="section-heading compact">
+        <div>
+          <p class="section-kicker">Access</p>
+          <h2>Choose a role</h2>
+        </div>
+      </div>
+      <div class="role-switch" role="tablist" aria-label="Role switcher">
+        <button id="role-student" class="role-pill active" type="button" data-role="student">Student View</button>
+        <button id="role-professor" class="role-pill" type="button" data-role="professor">Professor View</button>
+      </div>
+      <div class="login-grid">
+        <label class="login-card">
+          <span>Student login</span>
+          <select id="student-select"></select>
+        </label>
+        <article class="login-card professor-card" id="role-summary">
+          <span>Current permissions</span>
+          <p id="role-description">Students can review and track required items.</p>
+        </article>
+      </div>
     </section>
 
     <section class="controls">
       <label>
         Search
-        <input id="search-input" type="search" placeholder="Search course, topic, tags, or author" />
+        <input id="search-input" type="search" placeholder="Search material, subject, presentation, or notes" />
       </label>
       <label>
-        Course
-        <select id="course-filter">
-          <option value="all">All courses</option>
+        Semester
+        <select id="semester-filter">
+          <option value="all">All semesters</option>
         </select>
       </label>
       <label>
-        Status
-        <select id="status-filter">
-          <option value="all">All statuses</option>
-          <option value="open">Open</option>
-          <option value="answered">Answered</option>
-          <option value="resource">Resource shared</option>
+        Midterm
+        <select id="midterm-filter">
+          <option value="all">All midterms</option>
+        </select>
+      </label>
+      <label>
+        Subject
+        <select id="subject-filter">
+          <option value="all">All subjects</option>
+        </select>
+      </label>
+      <label>
+        Type
+        <select id="type-filter">
+          <option value="all">All types</option>
+        </select>
+      </label>
+      <label>
+        Student progress
+        <select id="progress-filter">
+          <option value="all">All items</option>
+          <option value="pending">Still needed</option>
+          <option value="acquired">Already acquired</option>
         </select>
       </label>
     </section>
 
     <section class="content-grid">
-      <section class="discussion-panel">
+      <section class="materials-panel">
         <div class="section-heading">
           <div>
-            <p class="section-kicker">Discussion board</p>
-            <h2>Recent materials conversations</h2>
+            <p class="section-kicker">Materials list</p>
+            <h2 id="program-title">3rd Year Odontology</h2>
           </div>
-          <p id="results-summary" class="results-summary">Loading discussions...</p>
+          <p id="results-summary" class="results-summary">Loading materials...</p>
         </div>
-        <div id="discussion-list" class="discussion-list"></div>
-        <p id="empty-state" class="empty-state hidden">No discussions match the current filters.</p>
+        <div id="materials-list" class="materials-list"></div>
+        <p id="empty-state" class="empty-state hidden">No materials match the current filters.</p>
       </section>
 
       <aside class="sidebar">
-        <section class="sidebar-card">
-          <p class="section-kicker">Courses</p>
-          <h3>Material activity</h3>
-          <div id="course-summary" class="course-summary"></div>
+        <section class="sidebar-card progress-card">
+          <p class="section-kicker">Student checklist</p>
+          <h3 id="student-name">Select a student</h3>
+          <div class="progress-grid">
+            <article>
+              <span id="stat-acquired">0</span>
+              <small>Acquired</small>
+            </article>
+            <article>
+              <span id="stat-pending">0</span>
+              <small>Pending</small>
+            </article>
+            <article>
+              <span id="stat-semesters">0</span>
+              <small>Semesters</small>
+            </article>
+            <article>
+              <span id="stat-student-midterms">0</span>
+              <small>Tracked midterms</small>
+            </article>
+          </div>
         </section>
 
         <section class="sidebar-card">
-          <p class="section-kicker">Prompt ideas</p>
-          <h3>Useful discussion starters</h3>
+          <p class="section-kicker">Professor workflow</p>
+          <h3>Catalog management</h3>
           <ul class="prompt-list">
-            <li>Which readings are required for the midterm, and which are optional?</li>
-            <li>Can anyone share notes on citation style changes from last lecture?</li>
-            <li>What chapter examples best explain the upcoming problem set?</li>
+            <li>Maintain the master XLS catalog for each semester and midterm.</li>
+            <li>Upload item images so students can visually confirm what to buy.</li>
+            <li>Edit quantities, purchase frequency, and notes for each material.</li>
           </ul>
+        </section>
+
+        <section class="sidebar-card">
+          <p class="section-kicker">Current data</p>
+          <h3>Workbook summary</h3>
+          <div id="subject-summary" class="summary-list"></div>
         </section>
       </aside>
     </section>
   </main>
 
-  <template id="discussion-template">
-    <article class="discussion-card">
-      <div class="discussion-topline">
-        <span class="course-pill"></span>
-        <span class="status-pill"></span>
+  <template id="material-template">
+    <article class="material-card">
+      <div class="material-image-wrap">
+        <img class="material-image" src="./assets/logo.png" alt="Material placeholder" />
       </div>
-      <h3 class="discussion-title"></h3>
-      <p class="discussion-snippet"></p>
-      <div class="tag-row"></div>
-      <footer class="discussion-meta">
-        <span class="discussion-author"></span>
-        <span class="discussion-replies"></span>
-        <span class="discussion-updated"></span>
-      </footer>
+      <div class="material-body">
+        <div class="material-topline">
+          <span class="course-pill material-code"></span>
+          <span class="status-pill material-type"></span>
+        </div>
+        <h3 class="material-title"></h3>
+        <p class="material-meta"></p>
+        <div class="tag-row">
+          <span class="tag-semester"></span>
+          <span class="tag-midterm"></span>
+          <span class="tag-location"></span>
+        </div>
+        <p class="material-notes"></p>
+        <footer class="material-footer">
+          <div class="material-details"></div>
+          <button class="toggle-acquired" type="button">Mark acquired</button>
+        </footer>
+      </div>
     </article>
   </template>
 
