@@ -1,0 +1,8 @@
+.DS_Store
+**/.DS_Store
+
+# Local editor and environment files
+.env
+.env.*
+.vscode/
+.idea/
