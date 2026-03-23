@@ -128,27 +128,48 @@ function populateControls() {
 }
 
 function renderProgramStats() {
-  const materials = state.catalog.materials;
   if (!state.filters.career || !state.filters.year) {
     els.programTitle.textContent = "Selecciona carrera y año";
+    els.statTotal.textContent = "0";
+    els.statSubjects.textContent = "0";
+    els.statMidterms.textContent = "0";
+    els.statEquipment.textContent = "0";
+    els.statRecurring.textContent = "0";
   } else {
+    const materials = cohortMaterials();
     els.programTitle.textContent = `${state.filters.career} ${state.filters.year}`.trim();
+    els.statTotal.textContent = String(materials.length);
+    els.statSubjects.textContent = String(new Set(materials.map((item) => item.subject)).size);
+    els.statMidterms.textContent = String(new Set(materials.map((item) => item.midterm)).size);
+    els.statEquipment.textContent = String(materials.filter((item) => item.type.toLowerCase().includes("equipo")).length);
+    els.statRecurring.textContent = String(materials.filter((item) => item.purchaseFrequency === "Periódica").length);
   }
-  els.statTotal.textContent = String(materials.length);
-  els.statSubjects.textContent = String(new Set(materials.map((item) => item.subject)).size);
-  els.statMidterms.textContent = String(new Set(materials.map((item) => item.midterm)).size);
-  els.statEquipment.textContent = String(materials.filter((item) => item.type.toLowerCase().includes("equipo")).length);
-  els.statRecurring.textContent = String(materials.filter((item) => item.purchaseFrequency === "Periódica").length);
 }
 
 function renderSubjectSummary() {
+  const materials = cohortMaterials();
   const counts = new Map();
-  for (const material of state.catalog.materials) {
+  for (const material of materials) {
     const current = counts.get(material.subject) || 0;
     counts.set(material.subject, current + 1);
   }
 
   els.subjectSummary.innerHTML = "";
+
+  if (!hasRequiredHeaderSelection()) {
+    const card = document.createElement("article");
+    card.innerHTML = "<strong>Sin seleccion</strong><p>Elige carrera y año para ver el resumen del archivo.</p>";
+    els.subjectSummary.append(card);
+    return;
+  }
+
+  if (!counts.size) {
+    const card = document.createElement("article");
+    card.innerHTML = "<strong>Sin resultados</strong><p>No hay materiales cargados para la seleccion actual.</p>";
+    els.subjectSummary.append(card);
+    return;
+  }
+
   for (const [subject, total] of [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8)) {
     const card = document.createElement("article");
     card.innerHTML = `<strong>${subject}</strong><p>${total} materiales listados</p>`;
@@ -209,13 +230,16 @@ function renderRoleState() {
 function renderStudentStats() {
   const selected = getSelectedStudent();
   const acquired = getAcquiredSet(selected.id);
-  const total = state.catalog.materials.length;
-  const semesters = new Set(state.catalog.materials.map((item) => item.semester)).size;
-  const midterms = new Set(state.catalog.materials.map((item) => item.midterm)).size;
+  const materials = cohortMaterials();
+  const materialIds = new Set(materials.map((item) => item.id));
+  const acquiredForCohort = [...acquired].filter((id) => materialIds.has(id)).length;
+  const total = materials.length;
+  const semesters = new Set(materials.map((item) => item.semester)).size;
+  const midterms = new Set(materials.map((item) => item.midterm)).size;
 
-  els.studentName.textContent = selected.name;
-  els.statAcquired.textContent = String(acquired.size);
-  els.statPending.textContent = String(total - acquired.size);
+  els.studentName.textContent = hasRequiredHeaderSelection() ? selected.name : "Selecciona carrera y año";
+  els.statAcquired.textContent = String(acquiredForCohort);
+  els.statPending.textContent = String(Math.max(total - acquiredForCohort, 0));
   els.statSemesters.textContent = String(semesters);
   els.statStudentMidterms.textContent = String(midterms);
 }
@@ -255,6 +279,16 @@ function activeFilterEntries() {
 
 function hasRequiredHeaderSelection() {
   return Boolean(state.filters.career && state.filters.year);
+}
+
+function cohortMaterials() {
+  if (!hasRequiredHeaderSelection()) {
+    return [];
+  }
+
+  return state.catalog.materials.filter(
+    (item) => careerForItem(item) === state.filters.career && item.year === state.filters.year
+  );
 }
 
 function renderActiveFilters() {
@@ -382,6 +416,8 @@ function bindEvents() {
     element.addEventListener("change", (event) => {
       state.filters[key] = event.target.value;
       renderProgramStats();
+      renderSubjectSummary();
+      renderStudentStats();
       renderMaterials();
     });
   }
