@@ -24,13 +24,13 @@
           <label>
             Carrera
             <select id="career-filter">
-              <option value="all">Todas las carreras</option>
+              <option value="" selected>Selecciona una carrera</option>
             </select>
           </label>
           <label>
             Año
             <select id="year-filter">
-              <option value="all">Todos los años</option>
+              <option value="" selected>Selecciona un año</option>
             </select>
           </label>
         </div>
@@ -165,6 +165,14 @@
             <input id="search-input" type="search" placeholder="Buscar material, asignatura, presentación u observaciones" />
           </label>
           <label>
+            Progreso del estudiante
+            <select id="progress-filter">
+              <option value="all">Todos los artículos</option>
+              <option value="pending">Aún faltan</option>
+              <option value="acquired">Ya adquiridos</option>
+            </select>
+          </label>
+          <label>
             Semestre
             <select id="semester-filter">
               <option value="all">Todos los semestres</option>
@@ -188,14 +196,6 @@
               <option value="all">Todos los tipos</option>
             </select>
           </label>
-          <label>
-            Progreso del estudiante
-            <select id="progress-filter">
-              <option value="all">Todos los artículos</option>
-              <option value="pending">Aún faltan</option>
-              <option value="acquired">Ya adquiridos</option>
-            </select>
-          </label>
         </section>
       </div>
     </details>
@@ -205,7 +205,7 @@
         <div class="section-heading">
           <div>
             <p class="section-kicker">Lista de materiales</p>
-            <h2 id="program-title">Odontología 3ro</h2>
+            <h2 id="program-title">Selecciona carrera y año</h2>
           </div>
           <p id="results-summary" class="results-summary">Cargando materiales...</p>
         </div>

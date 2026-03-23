@@ -3,8 +3,8 @@ const state = {
   selectedStudentId: "",
   catalog: null,
   filters: {
-    career: "all",
-    year: "all",
+    career: "",
+    year: "",
     query: "",
     semester: "all",
     midterm: "all",
@@ -91,11 +91,12 @@ async function loadCatalog() {
 }
 
 function fillSelect(select, values, allLabel) {
+  const current = select.value;
   select.innerHTML = "";
-  const allOption = document.createElement("option");
-  allOption.value = "all";
-  allOption.textContent = allLabel;
-  select.append(allOption);
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = allLabel;
+  select.append(placeholder);
 
   for (const value of values) {
     const option = document.createElement("option");
@@ -103,6 +104,8 @@ function fillSelect(select, values, allLabel) {
     option.textContent = value;
     select.append(option);
   }
+
+  select.value = values.includes(current) ? current : "";
 }
 
 function populateControls() {
@@ -116,8 +119,8 @@ function populateControls() {
   els.studentSelect.value = state.selectedStudentId;
 
   const materials = state.catalog.materials;
-  fillSelect(els.careerFilter, [...new Set(materials.map((item) => careerForItem(item)))].sort(), "Todas las carreras");
-  fillSelect(els.yearFilter, [...new Set(materials.map((item) => item.year))].sort(), "Todos los años");
+  fillSelect(els.careerFilter, [...new Set(materials.map((item) => careerForItem(item)))].sort(), "Selecciona una carrera");
+  fillSelect(els.yearFilter, [...new Set(materials.map((item) => item.year))].sort(), "Selecciona un año");
   fillSelect(els.semesterFilter, [...new Set(materials.map((item) => item.semester))].sort(), "Todos los semestres");
   fillSelect(els.midtermFilter, [...new Set(materials.map((item) => item.midterm))].sort(), "Todos los parciales");
   fillSelect(els.subjectFilter, [...new Set(materials.map((item) => item.subject))].sort(), "Todas las asignaturas");
@@ -126,9 +129,11 @@ function populateControls() {
 
 function renderProgramStats() {
   const materials = state.catalog.materials;
-  const careerLabel = state.filters.career === "all" ? careerForItem(materials[0]) : state.filters.career;
-  const yearLabel = state.filters.year === "all" ? materials[0]?.year || "" : state.filters.year;
-  els.programTitle.textContent = `${careerLabel} ${yearLabel}`.trim();
+  if (!state.filters.career || !state.filters.year) {
+    els.programTitle.textContent = "Selecciona carrera y año";
+  } else {
+    els.programTitle.textContent = `${state.filters.career} ${state.filters.year}`.trim();
+  }
   els.statTotal.textContent = String(materials.length);
   els.statSubjects.textContent = String(new Set(materials.map((item) => item.subject)).size);
   els.statMidterms.textContent = String(new Set(materials.map((item) => item.midterm)).size);
@@ -165,8 +170,8 @@ function matchesFilters(item) {
   ].join(" ").toLowerCase();
 
   const matchesQuery = !query || haystack.includes(query);
-  const matchesCareer = state.filters.career === "all" || careerForItem(item) === state.filters.career;
-  const matchesYear = state.filters.year === "all" || item.year === state.filters.year;
+  const matchesCareer = !!state.filters.career && careerForItem(item) === state.filters.career;
+  const matchesYear = !!state.filters.year && item.year === state.filters.year;
   const matchesSemester = state.filters.semester === "all" || item.semester === state.filters.semester;
   const matchesMidterm = state.filters.midterm === "all" || item.midterm === state.filters.midterm;
   const matchesSubject = state.filters.subject === "all" || item.subject === state.filters.subject;
@@ -248,6 +253,10 @@ function activeFilterEntries() {
   return entries.filter(([, value]) => value && value !== "all");
 }
 
+function hasRequiredHeaderSelection() {
+  return Boolean(state.filters.career && state.filters.year);
+}
+
 function renderActiveFilters() {
   const filters = activeFilterEntries();
   els.activeFilters.innerHTML = "";
@@ -268,9 +277,17 @@ function renderActiveFilters() {
 }
 
 function renderMaterials() {
-  const materials = filteredMaterials();
   els.materialsList.innerHTML = "";
   renderActiveFilters();
+
+  if (!hasRequiredHeaderSelection()) {
+    els.resultsSummary.textContent = "Selecciona una carrera y un año para ver los materiales.";
+    els.emptyState.textContent = "Debes elegir una carrera y un año en la parte superior antes de mostrar datos.";
+    els.emptyState.classList.remove("hidden");
+    return;
+  }
+
+  const materials = filteredMaterials();
 
   for (const item of materials) {
     const node = els.template.content.firstElementChild.cloneNode(true);
@@ -320,8 +337,8 @@ function renderMaterials() {
 
 function resetFilters() {
   state.filters = {
-    career: "all",
-    year: "all",
+    career: "",
+    year: "",
     query: "",
     semester: "all",
     midterm: "all",
@@ -329,8 +346,8 @@ function resetFilters() {
     type: "all",
     progress: "all",
   };
-  els.careerFilter.value = "all";
-  els.yearFilter.value = "all";
+  els.careerFilter.value = "";
+  els.yearFilter.value = "";
   els.searchInput.value = "";
   els.semesterFilter.value = "all";
   els.midtermFilter.value = "all";
