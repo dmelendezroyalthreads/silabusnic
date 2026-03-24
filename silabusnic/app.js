@@ -78,6 +78,16 @@ const els = {
   imageViewerClose: document.querySelector("#image-viewer-close"),
   imageZoomIn: document.querySelector("#image-zoom-in"),
   imageZoomOut: document.querySelector("#image-zoom-out"),
+  questionDialog: document.querySelector("#student-question-dialog"),
+  questionForm: document.querySelector("#student-question-form"),
+  questionTitle: document.querySelector("#question-title"),
+  questionClose: document.querySelector("#question-close"),
+  questionCancel: document.querySelector("#question-cancel"),
+  questionCarnet: document.querySelector("#question-carnet"),
+  questionName: document.querySelector("#question-name"),
+  questionEmail: document.querySelector("#question-email"),
+  questionBody: document.querySelector("#question-body"),
+  questionFeedback: document.querySelector("#question-feedback"),
 };
 
 function storageKey(studentId) {
@@ -86,6 +96,10 @@ function storageKey(studentId) {
 
 function professorStorageKey(professorId) {
   return `silabusnic-professor-${professorId}`;
+}
+
+function questionsStorageKey() {
+  return "silabusnic-student-questions";
 }
 
 function getSelectedStudent() {
@@ -522,6 +536,20 @@ function changeImageZoom(delta) {
   applyImageZoom();
 }
 
+function getStoredQuestions() {
+  try {
+    return JSON.parse(localStorage.getItem(questionsStorageKey()) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function persistStudentQuestion(entry) {
+  const questions = getStoredQuestions();
+  questions.push(entry);
+  localStorage.setItem(questionsStorageKey(), JSON.stringify(questions));
+}
+
 function materialDetails(item) {
   const details = [
     `Cantidad aproximada: ${item.quantity || "N/D"}`,
@@ -598,6 +626,7 @@ function renderMaterials() {
     const node = els.template.content.firstElementChild.cloneNode(true);
     const image = node.querySelector(".material-image");
     const imageButton = node.querySelector(".material-image-button");
+    const questionButton = node.querySelector(".ask-question");
     image.src = materialImage(displayItem);
     image.alt = `${displayItem.name} reference`;
     imageButton.addEventListener("click", () => {
@@ -635,8 +664,13 @@ function renderMaterials() {
       button.addEventListener("click", () => {
         openProfessorEditor(item);
       });
+      questionButton.classList.add("hidden");
     } else {
       professorStatus.classList.add("hidden");
+      questionButton.classList.toggle("hidden", state.role !== "student");
+      questionButton.addEventListener("click", () => {
+        openStudentQuestionDialog(displayItem);
+      });
       const acquired = isAcquired(item.id);
       button.textContent = acquired ? "Adquirido" : "Marcar como adquirido";
       button.classList.toggle("acquired", acquired);
@@ -680,6 +714,23 @@ function closeProfessorEditor() {
   els.editorDialog.close();
 }
 
+function openStudentQuestionDialog(item) {
+  const selectedStudent = getSelectedStudent();
+  els.questionDialog.dataset.materialId = item.id;
+  els.questionTitle.textContent = `${item.id} • ${item.name}`;
+  els.questionCarnet.value = "";
+  els.questionName.value = selectedStudent?.name || "";
+  els.questionEmail.value = "";
+  els.questionBody.value = "";
+  els.questionFeedback.textContent = "En la version en vivo validaremos el numero de carnet antes del envio.";
+  els.questionFeedback.classList.remove("hidden");
+  openDialog(els.questionDialog);
+}
+
+function closeStudentQuestionDialog() {
+  closeDialog(els.questionDialog);
+}
+
 function saveProfessorEdit(event) {
   event.preventDefault();
   const materialId = els.editorDialog.dataset.materialId;
@@ -704,6 +755,30 @@ function saveProfessorEdit(event) {
   closeProfessorEditor();
   renderProfessorStats();
   renderMaterials();
+}
+
+function saveStudentQuestion(event) {
+  event.preventDefault();
+  const materialId = els.questionDialog.dataset.materialId;
+  if (!materialId) {
+    return;
+  }
+  const material = state.catalog.materials.find((item) => item.id === materialId);
+  const entry = {
+    materialId,
+    materialName: material?.name || "",
+    career: state.filters.career,
+    year: state.filters.year,
+    studentId: state.selectedStudentId,
+    carnet: els.questionCarnet.value.trim(),
+    name: els.questionName.value.trim(),
+    replyEmail: els.questionEmail.value.trim(),
+    question: els.questionBody.value.trim(),
+    createdAt: new Date().toISOString(),
+  };
+  persistStudentQuestion(entry);
+  closeStudentQuestionDialog();
+  els.resultsSummary.textContent = `Pregunta enviada para ${entry.materialName || materialId}.`;
 }
 
 function resetFilters() {
@@ -792,6 +867,9 @@ function bindEvents() {
       closeImageViewer();
     }
   });
+  els.questionClose.addEventListener("click", closeStudentQuestionDialog);
+  els.questionCancel.addEventListener("click", closeStudentQuestionDialog);
+  els.questionForm.addEventListener("submit", saveStudentQuestion);
 
   for (const [key, element] of [
     ["career", els.careerFilter],

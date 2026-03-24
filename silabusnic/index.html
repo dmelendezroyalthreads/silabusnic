@@ -279,6 +279,7 @@
         <p class="material-notes"></p>
         <div class="material-details"></div>
         <footer class="material-footer">
+          <button class="ask-question secondary hidden" type="button">Enviar pregunta</button>
           <button class="toggle-acquired" type="button">Marcar como adquirido</button>
         </footer>
       </div>
@@ -354,6 +355,44 @@
         <img id="image-viewer-img" src="./assets/logo.png" alt="Vista ampliada del material" />
       </div>
     </div>
+  </dialog>
+
+  <dialog id="student-question-dialog" class="editor-dialog">
+    <form id="student-question-form" class="editor-form" method="dialog">
+      <div class="editor-header">
+        <div>
+          <p class="section-kicker">Consulta del estudiante</p>
+          <h3 id="question-title">Material</h3>
+        </div>
+        <button id="question-close" class="editor-close" type="button">Cerrar</button>
+      </div>
+
+      <div class="editor-grid">
+        <label>
+          NUMERO DE CARNET
+          <input id="question-carnet" name="carnet" type="text" required />
+        </label>
+        <label>
+          NAME
+          <input id="question-name" name="name" type="text" required />
+        </label>
+        <label class="editor-full">
+          REPLY TO EMAIL
+          <input id="question-email" name="replyEmail" type="email" required />
+        </label>
+        <label class="editor-full">
+          Pregunta
+          <textarea id="question-body" name="question" rows="4" placeholder="Escribe tu duda sobre este material." required></textarea>
+        </label>
+      </div>
+
+      <p id="question-feedback" class="question-feedback hidden"></p>
+
+      <div class="editor-actions">
+        <button id="question-cancel" class="secondary" type="button">Cancelar</button>
+        <button id="question-save" class="primary" type="submit">Enviar pregunta</button>
+      </div>
+    </form>
   </dialog>
 
   <script src="./app.js"></script>
