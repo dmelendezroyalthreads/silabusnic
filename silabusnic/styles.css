@@ -514,6 +514,11 @@ h1 {
   color: var(--ink);
 }
 
+.role-pill.locked {
+  opacity: 0.72;
+  border: 1px dashed rgba(17, 46, 87, 0.18);
+}
+
 .role-pill.active {
   background: var(--ink);
   color: #fff8f3;

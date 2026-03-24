@@ -379,8 +379,10 @@ function renderRoleState() {
   const readyForRoleSelection = hasRequiredHeaderSelection();
   els.roleStudent.classList.toggle("active", state.role === "student");
   els.roleProfessor.classList.toggle("active", state.role === "professor");
-  els.roleStudent.disabled = !readyForRoleSelection;
-  els.roleProfessor.disabled = !readyForRoleSelection;
+  els.roleStudent.setAttribute("aria-disabled", String(!readyForRoleSelection));
+  els.roleProfessor.setAttribute("aria-disabled", String(!readyForRoleSelection));
+  els.roleStudent.classList.toggle("locked", !readyForRoleSelection);
+  els.roleProfessor.classList.toggle("locked", !readyForRoleSelection);
   els.roleDescription.textContent = readyForRoleSelection
     ? `Paso 3: ${roleDescription()}`
     : "Primero completa el Paso 1 (Carrera) y el Paso 2 (Año) para habilitar el Paso 3.";
@@ -728,6 +730,10 @@ function resetFilters() {
 
 function bindEvents() {
   els.roleStudent.addEventListener("click", () => {
+    if (!hasRequiredHeaderSelection()) {
+      renderRoleState();
+      return;
+    }
     state.role = "student";
     renderRoleState();
     renderStudentStats();
@@ -736,6 +742,10 @@ function bindEvents() {
   });
 
   els.roleProfessor.addEventListener("click", () => {
+    if (!hasRequiredHeaderSelection()) {
+      renderRoleState();
+      return;
+    }
     state.role = "professor";
     renderRoleState();
     renderStudentStats();
