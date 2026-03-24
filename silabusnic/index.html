@@ -22,13 +22,19 @@
         </div>
         <div class="header-selects">
           <label>
-            <span class="step-label"><strong>1.</strong> Carrera</span>
+            <span class="step-label">
+              <span class="step-icon" aria-hidden="true">🎓</span>
+              <strong>1.</strong> Carrera
+            </span>
             <select id="career-filter">
               <option value="" selected>Selecciona una carrera</option>
             </select>
           </label>
           <label>
-            <span class="step-label"><strong>2.</strong> Año</span>
+            <span class="step-label">
+              <span class="step-icon" aria-hidden="true">📘</span>
+              <strong>2.</strong> Año
+            </span>
             <select id="year-filter">
               <option value="" selected>Selecciona un año</option>
             </select>
@@ -36,7 +42,7 @@
         </div>
       </div>
       <div class="topbar-actions">
-        <a class="download-link" href="./data/MATERIALES%20ODONTOLOGIA.xlsx" download>Descargar XLS</a>
+        <button id="master-download" class="download-link" type="button">Descargar XLS</button>
         <button id="show-pending" class="primary" type="button">Ver pendientes</button>
         <button id="reset-filters" class="secondary" type="button">Limpiar filtros</button>
       </div>

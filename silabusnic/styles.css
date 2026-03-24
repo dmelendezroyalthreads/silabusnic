@@ -134,6 +134,17 @@ a {
   align-items: center;
 }
 
+.step-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(17, 46, 87, 0.1);
+  font-size: 0.9rem;
+}
+
 .step-label strong {
   color: var(--accent-dark);
 }
