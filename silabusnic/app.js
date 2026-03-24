@@ -204,9 +204,70 @@ function renderSubjectSummary() {
 
   for (const [subject, total] of [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8)) {
     const card = document.createElement("article");
-    card.innerHTML = `<strong>${subject}</strong><p>${total} materiales listados</p>`;
+    card.innerHTML = `
+      <strong>${subject}</strong>
+      <p>${total} materiales listados</p>
+      <button class="summary-export-btn" type="button" data-subject="${subject}">XLS</button>
+    `;
     els.subjectSummary.append(card);
   }
+}
+
+function exportSubjectAsXls(subject) {
+  const rows = cohortMaterials().filter((item) => item.subject === subject);
+  if (!rows.length) {
+    return;
+  }
+
+  const headers = [
+    "ID",
+    "Material",
+    "Presentacion",
+    "Cantidad",
+    "Asignatura",
+    "Ano",
+    "Semestre",
+    "Parcial",
+    "Ubicacion",
+    "Tipo",
+    "Compra",
+    "Observaciones",
+  ];
+
+  const lines = [
+    headers.join("\t"),
+    ...rows.map((item) =>
+      [
+        item.id,
+        item.name,
+        item.presentation,
+        item.quantity,
+        item.subject,
+        item.year,
+        item.semester,
+        item.midterm,
+        item.location,
+        item.type,
+        item.purchaseFrequency,
+        item.notes,
+      ]
+        .map((value) => String(value ?? "").replace(/\t/g, " ").replace(/\n/g, " "))
+        .join("\t")
+    ),
+  ];
+
+  const blob = new Blob([lines.join("\n")], {
+    type: "application/vnd.ms-excel;charset=utf-8;",
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  const safeSubject = subject.toLowerCase().replace(/[^a-z0-9]+/gi, "-");
+  link.href = url;
+  link.download = `${safeSubject || "categoria"}.xls`;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
 }
 
 function matchesFilters(item) {
@@ -517,6 +578,14 @@ function bindEvents() {
     state.selectedStudentId = event.target.value;
     renderStudentStats();
     renderMaterials();
+  });
+
+  els.subjectSummary.addEventListener("click", (event) => {
+    const button = event.target.closest(".summary-export-btn");
+    if (!button) {
+      return;
+    }
+    exportSubjectAsXls(button.dataset.subject || "");
   });
 
   els.professorSelect.addEventListener("change", (event) => {

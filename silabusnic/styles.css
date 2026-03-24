@@ -696,6 +696,20 @@ h1 {
   border: 1px solid rgba(17, 46, 87, 0.08);
 }
 
+.summary-export-btn {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(17, 46, 87, 0.12);
+  background: rgba(17, 46, 87, 0.08);
+  color: var(--ink);
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
 .professor-stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
