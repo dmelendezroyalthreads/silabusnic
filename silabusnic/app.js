@@ -607,8 +607,65 @@ function persistStudentProgress() {
   localStorage.setItem(storageKey(state.selectedStudentId), JSON.stringify([...getAcquiredSet()]));
 }
 
+function svgDataUri(svg) {
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+function pickMaterialArtwork(item) {
+  const type = String(item.type || "").toLowerCase();
+  const name = String(item.name || "").toLowerCase();
+  const location = String(item.location || "").toLowerCase();
+
+  if (type.includes("protección") || type.includes("proteccion") || name.includes("guante") || name.includes("mascar")) {
+    return { icon: "P", label: "PRO", accent: "#5a7c98", bgTop: "#f2f7fb", bgBottom: "#dceaf5" };
+  }
+  if (type.includes("equipo") || name.includes("radiograf") || name.includes("lampara") || name.includes("motor")) {
+    return { icon: "EQ", label: "EQUIPO", accent: "#7f5b1b", bgTop: "#fff7e6", bgBottom: "#f3ddb0" };
+  }
+  if (type.includes("instrumento") || name.includes("espejo") || name.includes("pinza") || name.includes("cureta")) {
+    return { icon: "IN", label: "INST", accent: "#375d7e", bgTop: "#eef5fb", bgBottom: "#d6e5f2" };
+  }
+  if (type.includes("estudio") || name.includes("manual") || name.includes("atlas") || name.includes("libro")) {
+    return { icon: "ED", label: "EST", accent: "#6b5b8d", bgTop: "#f5f0fb", bgBottom: "#e3daf4" };
+  }
+  if (type.includes("reposición") || type.includes("reposicion") || name.includes("aguja") || name.includes("anest")) {
+    return { icon: "RP", label: "REP", accent: "#8d4b54", bgTop: "#fdf1f3", bgBottom: "#f4d8dd" };
+  }
+  if (location.includes("laboratorio") || name.includes("yeso") || name.includes("alginato") || name.includes("acril")) {
+    return { icon: "LB", label: "LAB", accent: "#56754f", bgTop: "#f2f8ee", bgBottom: "#dcebd3" };
+  }
+  if (location.includes("clínica") || location.includes("clinica") || name.includes("odont") || name.includes("resina")) {
+    return { icon: "CL", label: "CLI", accent: "#0f5f5c", bgTop: "#edf8f6", bgBottom: "#d3ece7" };
+  }
+  return { icon: "MT", label: "MAT", accent: "#112e57", bgTop: "#f6f2ea", bgBottom: "#eadbbd" };
+}
+
+function buildMaterialArtwork(item) {
+  const art = pickMaterialArtwork(item);
+  const shortName = String(item.name || "Material").slice(0, 20);
+  const safeShortName = escapeHtml(shortName);
+  const safeIcon = escapeHtml(art.icon);
+  const safeLabel = escapeHtml(art.label);
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="${safeShortName}">
+      <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${art.bgTop}" />
+          <stop offset="100%" stop-color="${art.bgBottom}" />
+        </linearGradient>
+      </defs>
+      <rect width="160" height="160" rx="28" fill="url(#bg)" />
+      <circle cx="80" cy="62" r="34" fill="#ffffff" fill-opacity="0.72" />
+      <text x="80" y="74" text-anchor="middle" font-family="Space Grotesk, Arial, sans-serif" font-size="28" font-weight="700" fill="${art.accent}">${safeIcon}</text>
+      <rect x="22" y="112" width="116" height="24" rx="12" fill="${art.accent}" fill-opacity="0.14" />
+      <text x="80" y="129" text-anchor="middle" font-family="Space Grotesk, Arial, sans-serif" font-size="14" font-weight="700" fill="${art.accent}">${safeLabel}</text>
+    </svg>
+  `;
+  return svgDataUri(svg);
+}
+
 function materialImage(item) {
-  return item.image || "./assets/logo.png";
+  return item.image || buildMaterialArtwork(item);
 }
 
 function applyImageZoom() {
