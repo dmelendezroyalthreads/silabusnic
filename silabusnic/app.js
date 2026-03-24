@@ -535,7 +535,7 @@ function renderStudentStats() {
   const acquiredForCohort = [...acquired].filter((id) => materialIds.has(id)).length;
   const total = materials.length;
   const semesters = new Set(materials.map((item) => item.semester)).size;
-  const midterms = new Set(materials.map((item) => item.midterm)).size;
+  const midterms = new Set(materials.map((item) => `${item.semester}::${item.midterm}`)).size;
 
   if (state.role !== "student" || !hasRequiredHeaderSelection()) {
     els.studentName.textContent = "Selecciona carrera, año y estudiante";
