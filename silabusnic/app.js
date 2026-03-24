@@ -2,6 +2,7 @@ const state = {
   role: "",
   selectedStudentId: "",
   selectedProfessorId: "",
+  imageZoom: 1,
   catalog: null,
   filters: {
     career: "",
@@ -71,6 +72,12 @@ const els = {
   editorPurchase: document.querySelector("#editor-purchase"),
   editorImage: document.querySelector("#editor-image"),
   editorNotes: document.querySelector("#editor-notes"),
+  imageViewer: document.querySelector("#image-viewer"),
+  imageViewerTitle: document.querySelector("#image-viewer-title"),
+  imageViewerImg: document.querySelector("#image-viewer-img"),
+  imageViewerClose: document.querySelector("#image-viewer-close"),
+  imageZoomIn: document.querySelector("#image-zoom-in"),
+  imageZoomOut: document.querySelector("#image-zoom-out"),
 };
 
 function storageKey(studentId) {
@@ -473,6 +480,46 @@ function materialImage(item) {
   return item.image || "./assets/logo.png";
 }
 
+function applyImageZoom() {
+  els.imageViewerImg.style.transform = `scale(${state.imageZoom})`;
+}
+
+function openDialog(dialog) {
+  if (typeof dialog.showModal === "function") {
+    dialog.showModal();
+    return;
+  }
+  dialog.setAttribute("open", "open");
+}
+
+function closeDialog(dialog) {
+  if (typeof dialog.close === "function") {
+    dialog.close();
+    return;
+  }
+  dialog.removeAttribute("open");
+}
+
+function openImageViewer(item) {
+  state.imageZoom = 1;
+  els.imageViewerTitle.textContent = item.name || "Material";
+  els.imageViewerImg.src = materialImage(item);
+  els.imageViewerImg.alt = `Vista ampliada de ${item.name || "material"}`;
+  applyImageZoom();
+  openDialog(els.imageViewer);
+}
+
+function closeImageViewer() {
+  if (els.imageViewer.open || els.imageViewer.hasAttribute("open")) {
+    closeDialog(els.imageViewer);
+  }
+}
+
+function changeImageZoom(delta) {
+  state.imageZoom = Math.min(3, Math.max(1, state.imageZoom + delta));
+  applyImageZoom();
+}
+
 function materialDetails(item) {
   const details = [
     `Cantidad aproximada: ${item.quantity || "N/D"}`,
@@ -548,8 +595,12 @@ function renderMaterials() {
     const displayItem = getDisplayMaterial(item);
     const node = els.template.content.firstElementChild.cloneNode(true);
     const image = node.querySelector(".material-image");
+    const imageButton = node.querySelector(".material-image-button");
     image.src = materialImage(displayItem);
     image.alt = `${displayItem.name} reference`;
+    imageButton.addEventListener("click", () => {
+      openImageViewer(displayItem);
+    });
 
     node.querySelector(".material-code").textContent = displayItem.id;
     node.querySelector(".material-type").textContent = displayItem.type;
@@ -723,6 +774,14 @@ function bindEvents() {
   els.editorClose.addEventListener("click", closeProfessorEditor);
   els.editorCancel.addEventListener("click", closeProfessorEditor);
   els.editorForm.addEventListener("submit", saveProfessorEdit);
+  els.imageViewerClose.addEventListener("click", closeImageViewer);
+  els.imageZoomIn.addEventListener("click", () => changeImageZoom(0.25));
+  els.imageZoomOut.addEventListener("click", () => changeImageZoom(-0.25));
+  els.imageViewer.addEventListener("click", (event) => {
+    if (event.target === els.imageViewer) {
+      closeImageViewer();
+    }
+  });
 
   for (const [key, element] of [
     ["career", els.careerFilter],
