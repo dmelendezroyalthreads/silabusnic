@@ -39,6 +39,7 @@ const els = {
   activeFilters: document.querySelector("#active-filters"),
   resultsSummary: document.querySelector("#results-summary"),
   emptyState: document.querySelector("#empty-state"),
+  masterDownload: document.querySelector("#master-download"),
   showPending: document.querySelector("#show-pending"),
   resetFilters: document.querySelector("#reset-filters"),
   template: document.querySelector("#material-template"),
@@ -234,40 +235,79 @@ function exportSubjectAsXls(subject) {
     "Observaciones",
   ];
 
-  const lines = [
-    headers.join("\t"),
-    ...rows.map((item) =>
-      [
-        item.id,
-        item.name,
-        item.presentation,
-        item.quantity,
-        item.subject,
-        item.year,
-        item.semester,
-        item.midterm,
-        item.location,
-        item.type,
-        item.purchaseFrequency,
-        item.notes,
-      ]
-        .map((value) => String(value ?? "").replace(/\t/g, " ").replace(/\n/g, " "))
-        .join("\t")
-    ),
-  ];
+  const safeRows = rows.map((item) => [
+    item.id,
+    item.name,
+    item.presentation,
+    item.quantity,
+    item.subject,
+    item.year,
+    item.semester,
+    item.midterm,
+    item.location,
+    item.type,
+    item.purchaseFrequency,
+    item.notes,
+  ]);
+  const safeSubject = subject.toLowerCase().replace(/[^a-z0-9]+/gi, "-");
+  const blob = buildExcelTableBlob(headers, safeRows, subject);
+  triggerBlobDownload(blob, `${safeSubject || "categoria"}.xls`);
+}
 
-  const blob = new Blob([lines.join("\n")], {
-    type: "application/vnd.ms-excel;charset=utf-8;",
-  });
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function buildExcelTableBlob(headers, rows, sheetName) {
+  const headerHtml = headers.map((header) => `<th>${escapeHtml(header)}</th>`).join("");
+  const rowHtml = rows
+    .map(
+      (row) =>
+        `<tr>${row.map((cell) => `<td>${escapeHtml(cell).replace(/\n/g, "<br>")}</td>`).join("")}</tr>`
+    )
+    .join("");
+  const html = `<!doctype html>
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:x="urn:schemas-microsoft-com:office:excel"
+      xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+  <meta charset="utf-8">
+  <meta name="ProgId" content="Excel.Sheet">
+  <meta name="Generator" content="Silabus Portal">
+  <title>${escapeHtml(sheetName)}</title>
+</head>
+<body>
+  <table>
+    <thead><tr>${headerHtml}</tr></thead>
+    <tbody>${rowHtml}</tbody>
+  </table>
+</body>
+</html>`;
+  return new Blob([html], { type: "application/vnd.ms-excel;charset=utf-8;" });
+}
+
+function triggerBlobDownload(blob, filename) {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
-  const safeSubject = subject.toLowerCase().replace(/[^a-z0-9]+/gi, "-");
   link.href = url;
-  link.download = `${safeSubject || "categoria"}.xls`;
+  link.download = filename;
   document.body.append(link);
   link.click();
   link.remove();
-  URL.revokeObjectURL(url);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+async function downloadMasterWorkbook() {
+  const response = await fetch("./data/MATERIALES%20ODONTOLOGIA.xlsx");
+  if (!response.ok) {
+    throw new Error("No se pudo descargar el archivo maestro.");
+  }
+  const blob = await response.blob();
+  triggerBlobDownload(blob, "MATERIALES_ODONTOLOGIA.xlsx");
 }
 
 function matchesFilters(item) {
@@ -537,6 +577,7 @@ function renderMaterials() {
 }
 
 function resetFilters() {
+  state.role = "";
   state.filters = {
     career: "",
     year: "",
@@ -586,6 +627,14 @@ function bindEvents() {
       return;
     }
     exportSubjectAsXls(button.dataset.subject || "");
+  });
+
+  els.masterDownload.addEventListener("click", async () => {
+    try {
+      await downloadMasterWorkbook();
+    } catch (error) {
+      els.resultsSummary.textContent = error.message;
+    }
   });
 
   els.professorSelect.addEventListener("change", (event) => {
@@ -645,6 +694,7 @@ function bindEvents() {
     resetFilters();
     renderProgramStats();
     renderSubjectSummary();
+    renderRoleState();
     renderMaterials();
     renderStudentStats();
     renderProfessorStats();
