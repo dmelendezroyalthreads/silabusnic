@@ -139,6 +139,10 @@ const els = {
   welcomeBack: document.querySelector("#welcome-back"),
   welcomeNext: document.querySelector("#welcome-next"),
   welcomeConfirm: document.querySelector("#welcome-confirm"),
+  downloadDisclaimerDialog: document.querySelector("#download-disclaimer-dialog"),
+  downloadDisclaimerClose: document.querySelector("#download-disclaimer-close"),
+  downloadDisclaimerCancel: document.querySelector("#download-disclaimer-cancel"),
+  downloadDisclaimerConfirm: document.querySelector("#download-disclaimer-confirm"),
 };
 
 function storageKey(studentId) {
@@ -652,6 +656,14 @@ function closeWelcomeDialog() {
   closeDialog(els.welcomeDialog);
 }
 
+function openDownloadDisclaimer() {
+  openDialog(els.downloadDisclaimerDialog);
+}
+
+function closeDownloadDisclaimer() {
+  closeDialog(els.downloadDisclaimerDialog);
+}
+
 function renderWelcomeStep() {
   const onFirstStep = state.welcomeStep === 1;
   els.welcomeTitle.textContent = onFirstStep ? "Antes de comenzar" : "Cómo funciona esta demo";
@@ -981,11 +993,7 @@ function bindEvents() {
   });
 
   els.masterDownload.addEventListener("click", async () => {
-    try {
-      await downloadMasterWorkbook();
-    } catch (error) {
-      els.resultsSummary.textContent = error.message;
-    }
+    openDownloadDisclaimer();
   });
 
   els.professorSelect.addEventListener("change", (event) => {
@@ -1018,6 +1026,16 @@ function bindEvents() {
     renderWelcomeStep();
   });
   els.welcomeConfirm.addEventListener("click", closeWelcomeDialog);
+  els.downloadDisclaimerClose.addEventListener("click", closeDownloadDisclaimer);
+  els.downloadDisclaimerCancel.addEventListener("click", closeDownloadDisclaimer);
+  els.downloadDisclaimerConfirm.addEventListener("click", async () => {
+    closeDownloadDisclaimer();
+    try {
+      await downloadMasterWorkbook();
+    } catch (error) {
+      els.resultsSummary.textContent = error.message;
+    }
+  });
 
   for (const [key, element] of [
     ["career", els.careerFilter],
