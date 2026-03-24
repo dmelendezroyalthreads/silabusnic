@@ -58,6 +58,19 @@ const els = {
   professorActiveName: document.querySelector("#professor-active-name"),
   professorEditingCount: document.querySelector("#professor-editing-count"),
   professorUpdatedCount: document.querySelector("#professor-updated-count"),
+  editorDialog: document.querySelector("#professor-editor"),
+  editorForm: document.querySelector("#professor-editor-form"),
+  editorTitle: document.querySelector("#editor-title"),
+  editorClose: document.querySelector("#editor-close"),
+  editorCancel: document.querySelector("#editor-cancel"),
+  editorName: document.querySelector("#editor-name"),
+  editorPresentation: document.querySelector("#editor-presentation"),
+  editorQuantity: document.querySelector("#editor-quantity"),
+  editorLocation: document.querySelector("#editor-location"),
+  editorType: document.querySelector("#editor-type"),
+  editorPurchase: document.querySelector("#editor-purchase"),
+  editorImage: document.querySelector("#editor-image"),
+  editorNotes: document.querySelector("#editor-notes"),
 };
 
 function storageKey(studentId) {
@@ -401,6 +414,35 @@ function getProfessorActivity(professorId = state.selectedProfessorId) {
   return state.professorActivity[professorId] || {};
 }
 
+function getProfessorRecord(materialId, professorId = state.selectedProfessorId) {
+  const record = getProfessorActivity(professorId)[materialId];
+  if (!record) return { status: "", draft: null };
+  if (typeof record === "string") return { status: record, draft: null };
+  return {
+    status: record.status || "",
+    draft: record.draft || null,
+  };
+}
+
+function getDisplayMaterial(item) {
+  if (state.role !== "professor" || !state.selectedProfessorId) {
+    return item;
+  }
+  const record = getProfessorRecord(item.id);
+  return record.draft ? { ...item, ...record.draft } : item;
+}
+
+function setProfessorRecord(materialId, nextRecord) {
+  if (!state.professorActivity[state.selectedProfessorId]) {
+    state.professorActivity[state.selectedProfessorId] = {};
+  }
+  if (!nextRecord.status && !nextRecord.draft) {
+    delete state.professorActivity[state.selectedProfessorId][materialId];
+  } else {
+    state.professorActivity[state.selectedProfessorId][materialId] = nextRecord;
+  }
+}
+
 function persistProfessorActivity() {
   localStorage.setItem(
     professorStorageKey(state.selectedProfessorId),
@@ -415,7 +457,7 @@ function renderProfessorStats() {
   const activity = getProfessorActivity();
   const statuses = Object.entries(activity)
     .filter(([materialId]) => materialIds.has(materialId))
-    .map(([, status]) => status);
+    .map(([, record]) => (typeof record === "string" ? record : record.status));
 
   els.professorActiveName.textContent =
     state.role === "professor" && professor ? professor.name : "Sin profesor seleccionado";
@@ -503,53 +545,42 @@ function renderMaterials() {
   const materials = filteredMaterials();
 
   for (const item of materials) {
+    const displayItem = getDisplayMaterial(item);
     const node = els.template.content.firstElementChild.cloneNode(true);
     const image = node.querySelector(".material-image");
-    image.src = materialImage(item);
-    image.alt = `${item.name} reference`;
+    image.src = materialImage(displayItem);
+    image.alt = `${displayItem.name} reference`;
 
-    node.querySelector(".material-code").textContent = item.id;
-    node.querySelector(".material-type").textContent = item.type;
-    node.querySelector(".material-title").textContent = item.name;
+    node.querySelector(".material-code").textContent = displayItem.id;
+    node.querySelector(".material-type").textContent = displayItem.type;
+    node.querySelector(".material-title").textContent = displayItem.name;
     node.querySelector(".material-meta").textContent =
-      `${item.subject} • ${item.ownership || "Individual"} • ${item.timing || "N/D"}`;
-    node.querySelector(".tag-semester").textContent = item.semester;
-    node.querySelector(".tag-midterm").textContent = `Parcial ${item.midterm}`;
-    node.querySelector(".tag-location").textContent = item.location || "Ubicacion pendiente";
+      `${displayItem.subject} • ${displayItem.ownership || "Individual"} • ${displayItem.timing || "N/D"}`;
+    node.querySelector(".tag-semester").textContent = displayItem.semester;
+    node.querySelector(".tag-midterm").textContent = `Parcial ${displayItem.midterm}`;
+    node.querySelector(".tag-location").textContent = displayItem.location || "Ubicacion pendiente";
     node.querySelector(".material-notes").textContent =
-      item.notes || item.otherSubjects || "Aun no hay observaciones del profesor para este material.";
-    node.querySelector(".material-details").innerHTML = materialDetails(item);
+      displayItem.notes || displayItem.otherSubjects || "Aun no hay observaciones del profesor para este material.";
+    node.querySelector(".material-details").innerHTML = materialDetails(displayItem);
 
     const button = node.querySelector(".toggle-acquired");
     const professorStatus = node.querySelector(".professor-status");
     if (state.role === "professor") {
-      const activity = getProfessorActivity();
-      const status = activity[item.id] || "";
+      const record = getProfessorRecord(item.id);
+      const status = record.status;
       professorStatus.classList.remove("hidden");
       professorStatus.textContent = status === "editing"
         ? "Estado del profesor: en edición"
         : status === "updated"
           ? "Estado del profesor: cambio marcado"
           : "Estado del profesor: sin cambios";
-      button.textContent = status === "editing"
-        ? "Marcar cambio"
-        : status === "updated"
-          ? "Limpiar estado"
-          : "Marcar edición";
+      if (record.draft) {
+        professorStatus.textContent += " • borrador guardado";
+      }
+      button.textContent = "Editar material";
       button.disabled = !state.selectedProfessorId;
       button.addEventListener("click", () => {
-        const next =
-          status === "" ? "editing" :
-          status === "editing" ? "updated" :
-          "";
-        if (next) {
-          state.professorActivity[state.selectedProfessorId][item.id] = next;
-        } else {
-          delete state.professorActivity[state.selectedProfessorId][item.id];
-        }
-        persistProfessorActivity();
-        renderProfessorStats();
-        renderMaterials();
+        openProfessorEditor(item);
       });
     } else {
       professorStatus.classList.add("hidden");
@@ -574,6 +605,52 @@ function renderMaterials() {
 
   els.resultsSummary.textContent = `${materials.length} material${materials.length === 1 ? "" : "es"} mostrados`;
   els.emptyState.classList.toggle("hidden", materials.length > 0);
+}
+
+function openProfessorEditor(item) {
+  const record = getProfessorRecord(item.id);
+  const displayItem = record.draft ? { ...item, ...record.draft } : item;
+  els.editorDialog.dataset.materialId = item.id;
+  els.editorTitle.textContent = `${item.id} • ${displayItem.name}`;
+  els.editorName.value = displayItem.name || "";
+  els.editorPresentation.value = displayItem.presentation || "";
+  els.editorQuantity.value = displayItem.quantity || "";
+  els.editorLocation.value = displayItem.location || "";
+  els.editorType.value = displayItem.type || "";
+  els.editorPurchase.value = displayItem.purchaseFrequency || "";
+  els.editorImage.value = displayItem.image || "";
+  els.editorNotes.value = displayItem.notes || "";
+  els.editorDialog.showModal();
+}
+
+function closeProfessorEditor() {
+  els.editorDialog.close();
+}
+
+function saveProfessorEdit(event) {
+  event.preventDefault();
+  const materialId = els.editorDialog.dataset.materialId;
+  if (!materialId || !state.selectedProfessorId) {
+    return;
+  }
+  const draft = {
+    name: els.editorName.value.trim(),
+    presentation: els.editorPresentation.value.trim(),
+    quantity: els.editorQuantity.value.trim(),
+    location: els.editorLocation.value.trim(),
+    type: els.editorType.value.trim(),
+    purchaseFrequency: els.editorPurchase.value.trim(),
+    image: els.editorImage.value.trim(),
+    notes: els.editorNotes.value.trim(),
+  };
+  setProfessorRecord(materialId, {
+    status: "updated",
+    draft,
+  });
+  persistProfessorActivity();
+  closeProfessorEditor();
+  renderProfessorStats();
+  renderMaterials();
 }
 
 function resetFilters() {
@@ -642,6 +719,10 @@ function bindEvents() {
     renderProfessorStats();
     renderMaterials();
   });
+
+  els.editorClose.addEventListener("click", closeProfessorEditor);
+  els.editorCancel.addEventListener("click", closeProfessorEditor);
+  els.editorForm.addEventListener("submit", saveProfessorEdit);
 
   for (const [key, element] of [
     ["career", els.careerFilter],

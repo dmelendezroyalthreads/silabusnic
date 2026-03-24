@@ -747,6 +747,71 @@ h1 {
   font-size: 0.82rem;
 }
 
+.editor-dialog {
+  width: min(760px, calc(100% - 24px));
+  border: none;
+  border-radius: 24px;
+  padding: 0;
+  background: transparent;
+}
+
+.editor-dialog::backdrop {
+  background: rgba(17, 46, 87, 0.32);
+}
+
+.editor-form {
+  background: #fffaf3;
+  border-radius: 24px;
+  padding: 22px;
+  border: 1px solid rgba(17, 46, 87, 0.08);
+  box-shadow: 0 18px 40px rgba(17, 46, 87, 0.16);
+}
+
+.editor-header,
+.editor-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.editor-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 18px 0;
+}
+
+.editor-grid label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.editor-grid input,
+.editor-grid textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--ink);
+}
+
+.editor-full {
+  grid-column: 1 / -1;
+}
+
+.editor-close {
+  border: 1px solid rgba(17, 46, 87, 0.12);
+  background: rgba(17, 46, 87, 0.06);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
 .summary-list strong {
   display: block;
   margin-bottom: 4px;
@@ -888,5 +953,9 @@ h1 {
     width: 100%;
     font-size: 0.76rem;
     padding: 9px 8px;
+  }
+
+  .editor-grid {
+    grid-template-columns: 1fr;
   }
 }

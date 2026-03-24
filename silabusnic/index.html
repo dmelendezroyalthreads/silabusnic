@@ -285,6 +285,58 @@
     </article>
   </template>
 
+  <dialog id="professor-editor" class="editor-dialog">
+    <form id="professor-editor-form" class="editor-form" method="dialog">
+      <div class="editor-header">
+        <div>
+          <p class="section-kicker">Edicion de material</p>
+          <h3 id="editor-title">Material</h3>
+        </div>
+        <button id="editor-close" class="editor-close" type="button">Cerrar</button>
+      </div>
+
+      <div class="editor-grid">
+        <label>
+          Nombre del material
+          <input id="editor-name" name="name" type="text" />
+        </label>
+        <label>
+          Presentacion
+          <input id="editor-presentation" name="presentation" type="text" />
+        </label>
+        <label>
+          Cantidad
+          <input id="editor-quantity" name="quantity" type="text" />
+        </label>
+        <label>
+          Ubicacion
+          <input id="editor-location" name="location" type="text" />
+        </label>
+        <label>
+          Tipo
+          <input id="editor-type" name="type" type="text" />
+        </label>
+        <label>
+          Compra
+          <input id="editor-purchase" name="purchaseFrequency" type="text" />
+        </label>
+        <label class="editor-full">
+          Imagen URL
+          <input id="editor-image" name="image" type="url" placeholder="https://..." />
+        </label>
+        <label class="editor-full">
+          Observaciones
+          <textarea id="editor-notes" name="notes" rows="4"></textarea>
+        </label>
+      </div>
+
+      <div class="editor-actions">
+        <button id="editor-cancel" class="secondary" type="button">Cancelar</button>
+        <button id="editor-save" class="primary" type="submit">Guardar cambios</button>
+      </div>
+    </form>
+  </dialog>
+
   <script src="./app.js"></script>
 </body>
 </html>
