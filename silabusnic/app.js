@@ -572,7 +572,7 @@ function filteredMaterials() {
 
 function roleDescription() {
   if (state.role === "professor") {
-    return "Los profesores administran el catálogo XLS y pueden marcar materiales en edición o con cambios realizados.";
+    return "Esta vista permite consultar el catálogo académico, editar materiales existentes, incorporar nuevos registros dentro de la demostración y actualizar información asociada, incluyendo imagen, presentación, ubicación, tipo, modalidad de compra y observaciones. En un entorno institucional en vivo, determinadas modificaciones podrían quedar sujetas a revisión y aprobación administrativa antes de su publicación para estudiantes.";
   }
   if (state.role === "student") {
     return "Los estudiantes pueden revisar materiales, filtrar por semestre o parcial y llevar seguimiento de lo ya adquirido.";
