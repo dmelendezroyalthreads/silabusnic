@@ -58,6 +58,8 @@ const CAREER_GROUPS = [
   },
 ];
 
+const YEAR_OPTIONS = ["1ro", "2do", "3ro", "4to", "5to"];
+
 const els = {
   roleStudent: document.querySelector("#role-student"),
   roleProfessor: document.querySelector("#role-professor"),
@@ -168,6 +170,10 @@ function careerHasCatalogData(career = state.filters.career) {
   return normalizeCareer(career) === normalizeCareer("Odontología");
 }
 
+function yearHasCatalogData(year = state.filters.year) {
+  return String(year || "").trim() === "3ro";
+}
+
 function getAcquiredSet(studentId = state.selectedStudentId) {
   if (!state.acquiredByStudent[studentId]) {
     state.acquiredByStudent[studentId] = new Set();
@@ -218,6 +224,10 @@ function fillSelect(select, values, allLabel) {
   select.value = values.includes(current) ? current : "";
 }
 
+function populateYearOptions() {
+  fillSelect(els.yearFilter, YEAR_OPTIONS, "Selecciona un año");
+}
+
 function populateCareerOptions() {
   const current = els.careerFilter.value;
   els.careerFilter.innerHTML = "";
@@ -266,7 +276,7 @@ function populateControls() {
 
   const materials = state.catalog.materials;
   populateCareerOptions();
-  fillSelect(els.yearFilter, [...new Set(materials.map((item) => item.year))].sort(), "Selecciona un año");
+  populateYearOptions();
   fillSelect(els.semesterFilter, [...new Set(materials.map((item) => item.semester))].sort(), "Todos los semestres");
   fillSelect(els.midtermFilter, [...new Set(materials.map((item) => item.midterm))].sort(), "Todos los parciales");
   fillSelect(els.subjectFilter, [...new Set(materials.map((item) => item.subject))].sort(), "Todas las asignaturas");
@@ -309,9 +319,9 @@ function renderSubjectSummary() {
     return;
   }
 
-  if (!careerHasCatalogData()) {
+  if (!careerHasCatalogData() || !yearHasCatalogData()) {
     const card = document.createElement("article");
-    card.innerHTML = "<strong>Datos en preparación</strong><p>Por ahora el resumen del archivo solo está disponible para Odontología.</p>";
+    card.innerHTML = "<strong>Datos en preparación</strong><p>Por ahora el resumen del archivo solo está disponible para Odontología 3ro.</p>";
     els.subjectSummary.append(card);
     return;
   }
@@ -705,9 +715,9 @@ function renderMaterials() {
     return;
   }
 
-  if (!careerHasCatalogData()) {
-    els.resultsSummary.textContent = "Catalogo disponible solo para Odontología.";
-    els.emptyState.textContent = "La primera carga de materiales funciona actualmente solo cuando se selecciona Odontología.";
+  if (!careerHasCatalogData() || !yearHasCatalogData()) {
+    els.resultsSummary.textContent = "Catalogo disponible solo para Odontología 3ro.";
+    els.emptyState.textContent = "La primera carga de materiales funciona actualmente solo cuando se selecciona Odontología en 3ro.";
     els.emptyState.classList.remove("hidden");
     return;
   }
