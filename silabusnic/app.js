@@ -135,6 +135,7 @@ const els = {
   welcomeTitle: document.querySelector("#welcome-title"),
   welcomeStep1: document.querySelector("#welcome-step-1"),
   welcomeStep2: document.querySelector("#welcome-step-2"),
+  welcomeStep3: document.querySelector("#welcome-step-3"),
   welcomeClose: document.querySelector("#welcome-close"),
   welcomeBack: document.querySelector("#welcome-back"),
   welcomeNext: document.querySelector("#welcome-next"),
@@ -735,12 +736,20 @@ function closePendingDisclaimer() {
 
 function renderWelcomeStep() {
   const onFirstStep = state.welcomeStep === 1;
-  els.welcomeTitle.textContent = onFirstStep ? "Antes de comenzar" : "Cómo funciona esta demo";
+  const onSecondStep = state.welcomeStep === 2;
+  const onThirdStep = state.welcomeStep === 3;
+
+  els.welcomeTitle.textContent = onFirstStep
+    ? "Antes de comenzar"
+    : onSecondStep
+      ? "Cómo funciona esta demo"
+      : "Consultas y acceso institucional";
   els.welcomeStep1.classList.toggle("hidden", !onFirstStep);
-  els.welcomeStep2.classList.toggle("hidden", onFirstStep);
+  els.welcomeStep2.classList.toggle("hidden", !onSecondStep);
+  els.welcomeStep3.classList.toggle("hidden", !onThirdStep);
   els.welcomeBack.classList.toggle("hidden", onFirstStep);
-  els.welcomeNext.classList.toggle("hidden", !onFirstStep);
-  els.welcomeConfirm.classList.toggle("hidden", onFirstStep);
+  els.welcomeNext.classList.toggle("hidden", onThirdStep);
+  els.welcomeConfirm.classList.toggle("hidden", !onThirdStep);
 }
 
 function changeImageZoom(delta) {
@@ -1087,11 +1096,11 @@ function bindEvents() {
   els.questionForm.addEventListener("submit", saveStudentQuestion);
   els.welcomeClose.addEventListener("click", closeWelcomeDialog);
   els.welcomeBack.addEventListener("click", () => {
-    state.welcomeStep = 1;
+    state.welcomeStep = Math.max(1, state.welcomeStep - 1);
     renderWelcomeStep();
   });
   els.welcomeNext.addEventListener("click", () => {
-    state.welcomeStep = 2;
+    state.welcomeStep = Math.min(3, state.welcomeStep + 1);
     renderWelcomeStep();
   });
   els.welcomeConfirm.addEventListener("click", closeWelcomeDialog);
