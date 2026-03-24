@@ -162,11 +162,17 @@ function careerForItem(item) {
 }
 
 function normalizeCareer(value) {
-  return String(value || "")
+  const normalized = String(value || "")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .trim();
+
+  if (normalized === "odontology") {
+    return "odontologia";
+  }
+
+  return normalized;
 }
 
 function careerHasCatalogData(career = state.filters.career) {
