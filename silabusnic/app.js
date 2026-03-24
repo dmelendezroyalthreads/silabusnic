@@ -18,6 +18,46 @@ const state = {
   professorActivity: {},
 };
 
+const CAREER_GROUPS = [
+  {
+    label: "🏥 Salud",
+    options: [
+      { value: "Medicina General", label: "Medicina General" },
+      { value: "Odontología", label: "Odontología" },
+    ],
+  },
+  {
+    label: "⚖️ Derecho y Ciencias Sociales",
+    options: [
+      { value: "Derecho", label: "Derecho" },
+      { value: "Psicología", label: "Psicología" },
+      { value: "Pedagogía con mención en Administración y Gestión Educativa", label: "Pedagogía con mención en Administración y Gestión Educativa" },
+    ],
+  },
+  {
+    label: "🌍 Negocios y Economía",
+    options: [
+      { value: "Administración de Empresas", label: "Administración de Empresas" },
+      { value: "Contabilidad y Finanzas", label: "Contabilidad y Finanzas" },
+      { value: "Marketing y Publicidad", label: "Marketing y Publicidad" },
+      { value: "Relaciones Internacionales y Comercio Internacional", label: "Relaciones Internacionales y Comercio Internacional" },
+    ],
+  },
+  {
+    label: "🏗️ Ingeniería y Arquitectura",
+    options: [
+      { value: "Ingeniería Industrial", label: "Ingeniería Industrial" },
+      { value: "Arquitectura", label: "Arquitectura" },
+    ],
+  },
+  {
+    label: "🎨 Creativo y Digital",
+    options: [
+      { value: "Arte Digital y Animación", label: "Arte Digital y Animación" },
+    ],
+  },
+];
+
 const els = {
   roleStudent: document.querySelector("#role-student"),
   roleProfessor: document.querySelector("#role-professor"),
@@ -116,6 +156,18 @@ function careerForItem(item) {
   return state.catalog.program.replace(/^\s*\d+(st|nd|rd|th)?\s+Year\s+/i, "").trim();
 }
 
+function normalizeCareer(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
+function careerHasCatalogData(career = state.filters.career) {
+  return normalizeCareer(career) === normalizeCareer("Odontología");
+}
+
 function getAcquiredSet(studentId = state.selectedStudentId) {
   if (!state.acquiredByStudent[studentId]) {
     state.acquiredByStudent[studentId] = new Set();
@@ -166,6 +218,33 @@ function fillSelect(select, values, allLabel) {
   select.value = values.includes(current) ? current : "";
 }
 
+function populateCareerOptions() {
+  const current = els.careerFilter.value;
+  els.careerFilter.innerHTML = "";
+
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = "Selecciona una carrera";
+  els.careerFilter.append(placeholder);
+
+  for (const group of CAREER_GROUPS) {
+    const optgroup = document.createElement("optgroup");
+    optgroup.label = group.label;
+
+    for (const optionConfig of group.options) {
+      const option = document.createElement("option");
+      option.value = optionConfig.value;
+      option.textContent = optionConfig.label;
+      optgroup.append(option);
+    }
+
+    els.careerFilter.append(optgroup);
+  }
+
+  const availableValues = CAREER_GROUPS.flatMap((group) => group.options.map((option) => option.value));
+  els.careerFilter.value = availableValues.includes(current) ? current : "";
+}
+
 function populateControls() {
   els.studentSelect.innerHTML = "";
   for (const student of state.catalog.students) {
@@ -186,7 +265,7 @@ function populateControls() {
   els.professorSelect.value = state.selectedProfessorId;
 
   const materials = state.catalog.materials;
-  fillSelect(els.careerFilter, [...new Set(materials.map((item) => careerForItem(item)))].sort(), "Selecciona una carrera");
+  populateCareerOptions();
   fillSelect(els.yearFilter, [...new Set(materials.map((item) => item.year))].sort(), "Selecciona un año");
   fillSelect(els.semesterFilter, [...new Set(materials.map((item) => item.semester))].sort(), "Todos los semestres");
   fillSelect(els.midtermFilter, [...new Set(materials.map((item) => item.midterm))].sort(), "Todos los parciales");
@@ -226,6 +305,13 @@ function renderSubjectSummary() {
   if (!hasRequiredHeaderSelection()) {
     const card = document.createElement("article");
     card.innerHTML = "<strong>Sin seleccion</strong><p>Elige carrera y año para ver el resumen del archivo.</p>";
+    els.subjectSummary.append(card);
+    return;
+  }
+
+  if (!careerHasCatalogData()) {
+    const card = document.createElement("article");
+    card.innerHTML = "<strong>Datos en preparación</strong><p>Por ahora el resumen del archivo solo está disponible para Odontología.</p>";
     els.subjectSummary.append(card);
     return;
   }
@@ -358,7 +444,7 @@ function matchesFilters(item) {
   ].join(" ").toLowerCase();
 
   const matchesQuery = !query || haystack.includes(query);
-  const matchesCareer = !!state.filters.career && careerForItem(item) === state.filters.career;
+  const matchesCareer = !!state.filters.career && normalizeCareer(careerForItem(item)) === normalizeCareer(state.filters.career);
   const matchesYear = !!state.filters.year && item.year === state.filters.year;
   const matchesSemester = state.filters.semester === "all" || item.semester === state.filters.semester;
   const matchesMidterm = state.filters.midterm === "all" || item.midterm === state.filters.midterm;
@@ -585,7 +671,7 @@ function cohortMaterials() {
   }
 
   return state.catalog.materials.filter(
-    (item) => careerForItem(item) === state.filters.career && item.year === state.filters.year
+    (item) => normalizeCareer(careerForItem(item)) === normalizeCareer(state.filters.career) && item.year === state.filters.year
   );
 }
 
@@ -615,6 +701,13 @@ function renderMaterials() {
   if (!hasRequiredHeaderSelection()) {
     els.resultsSummary.textContent = "Selecciona una carrera y un año para ver los materiales.";
     els.emptyState.textContent = "Debes elegir una carrera y un año en la parte superior antes de mostrar datos.";
+    els.emptyState.classList.remove("hidden");
+    return;
+  }
+
+  if (!careerHasCatalogData()) {
+    els.resultsSummary.textContent = "Catalogo disponible solo para Odontología.";
+    els.emptyState.textContent = "La primera carga de materiales funciona actualmente solo cuando se selecciona Odontología.";
     els.emptyState.classList.remove("hidden");
     return;
   }
