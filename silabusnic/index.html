@@ -10,6 +10,27 @@
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
+  <dialog id="welcome-dialog" class="welcome-dialog">
+    <div class="welcome-panel">
+      <div class="editor-header">
+        <div>
+          <p class="section-kicker">Guía rápida</p>
+          <h2>Antes de comenzar</h2>
+        </div>
+        <button id="welcome-close" class="editor-close" type="button">Cerrar</button>
+      </div>
+      <p class="welcome-copy">
+        Para usar el portal, sigue los pasos en este orden: <strong>1. Carrera</strong>, <strong>2. Año</strong> y <strong>3. Acceso</strong>.
+      </p>
+      <p class="welcome-copy">
+        El <strong>Paso 3</strong> está configurado solo para demostración con nombres de estudiantes y profesores. En la versión en vivo, el acceso requerirá credenciales de inicio de sesión.
+      </p>
+      <div class="editor-actions">
+        <button id="welcome-confirm" class="primary" type="button">Entendido</button>
+      </div>
+    </div>
+  </dialog>
+
   <main class="shell">
     <header class="topbar">
       <div class="topbar-main">

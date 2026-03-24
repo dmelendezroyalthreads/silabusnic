@@ -130,6 +130,9 @@ const els = {
   questionEmail: document.querySelector("#question-email"),
   questionBody: document.querySelector("#question-body"),
   questionFeedback: document.querySelector("#question-feedback"),
+  welcomeDialog: document.querySelector("#welcome-dialog"),
+  welcomeClose: document.querySelector("#welcome-close"),
+  welcomeConfirm: document.querySelector("#welcome-confirm"),
 };
 
 function storageKey(studentId) {
@@ -627,6 +630,14 @@ function closeImageViewer() {
   }
 }
 
+function openWelcomeDialog() {
+  openDialog(els.welcomeDialog);
+}
+
+function closeWelcomeDialog() {
+  closeDialog(els.welcomeDialog);
+}
+
 function changeImageZoom(delta) {
   state.imageZoom = Math.min(3, Math.max(1, state.imageZoom + delta));
   applyImageZoom();
@@ -973,6 +984,8 @@ function bindEvents() {
   els.questionClose.addEventListener("click", closeStudentQuestionDialog);
   els.questionCancel.addEventListener("click", closeStudentQuestionDialog);
   els.questionForm.addEventListener("submit", saveStudentQuestion);
+  els.welcomeClose.addEventListener("click", closeWelcomeDialog);
+  els.welcomeConfirm.addEventListener("click", closeWelcomeDialog);
 
   for (const [key, element] of [
     ["career", els.careerFilter],
@@ -1042,6 +1055,7 @@ async function init() {
     renderStudentStats();
     renderProfessorStats();
     renderMaterials();
+    openWelcomeDialog();
     bindEvents();
   } catch (error) {
     els.resultsSummary.textContent = "No se pudo cargar el catalogo de materiales.";
