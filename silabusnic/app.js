@@ -143,6 +143,10 @@ const els = {
   downloadDisclaimerClose: document.querySelector("#download-disclaimer-close"),
   downloadDisclaimerCancel: document.querySelector("#download-disclaimer-cancel"),
   downloadDisclaimerConfirm: document.querySelector("#download-disclaimer-confirm"),
+  pendingDisclaimerDialog: document.querySelector("#pending-disclaimer-dialog"),
+  pendingDisclaimerClose: document.querySelector("#pending-disclaimer-close"),
+  pendingDisclaimerCancel: document.querySelector("#pending-disclaimer-cancel"),
+  pendingDisclaimerConfirm: document.querySelector("#pending-disclaimer-confirm"),
 };
 
 function storageKey(studentId) {
@@ -721,6 +725,14 @@ function closeDownloadDisclaimer() {
   closeDialog(els.downloadDisclaimerDialog);
 }
 
+function openPendingDisclaimer() {
+  openDialog(els.pendingDisclaimerDialog);
+}
+
+function closePendingDisclaimer() {
+  closeDialog(els.pendingDisclaimerDialog);
+}
+
 function renderWelcomeStep() {
   const onFirstStep = state.welcomeStep === 1;
   els.welcomeTitle.textContent = onFirstStep ? "Antes de comenzar" : "Cómo funciona esta demo";
@@ -1132,6 +1144,13 @@ function bindEvents() {
   }
 
   els.showPending.addEventListener("click", () => {
+    openPendingDisclaimer();
+  });
+
+  els.pendingDisclaimerClose.addEventListener("click", closePendingDisclaimer);
+  els.pendingDisclaimerCancel.addEventListener("click", closePendingDisclaimer);
+  els.pendingDisclaimerConfirm.addEventListener("click", () => {
+    closePendingDisclaimer();
     state.role = "student";
     renderRoleState();
     state.filters.progress = "pending";
