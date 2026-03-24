@@ -596,6 +596,7 @@ function renderRoleState() {
   els.studentLoginCard.classList.toggle("hidden", state.role !== "student");
   els.professorLoginCard.classList.toggle("hidden", state.role !== "professor");
   els.professorWorkflow.classList.toggle("hidden", state.role !== "professor");
+  document.querySelector("#role-summary")?.classList.toggle("hidden", state.role === "professor");
 }
 
 function renderStudentStats() {
