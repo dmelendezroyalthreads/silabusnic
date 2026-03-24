@@ -3,6 +3,7 @@ const state = {
   selectedStudentId: "",
   selectedProfessorId: "",
   imageZoom: 1,
+  welcomeStep: 1,
   catalog: null,
   filters: {
     career: "",
@@ -131,7 +132,12 @@ const els = {
   questionBody: document.querySelector("#question-body"),
   questionFeedback: document.querySelector("#question-feedback"),
   welcomeDialog: document.querySelector("#welcome-dialog"),
+  welcomeTitle: document.querySelector("#welcome-title"),
+  welcomeStep1: document.querySelector("#welcome-step-1"),
+  welcomeStep2: document.querySelector("#welcome-step-2"),
   welcomeClose: document.querySelector("#welcome-close"),
+  welcomeBack: document.querySelector("#welcome-back"),
+  welcomeNext: document.querySelector("#welcome-next"),
   welcomeConfirm: document.querySelector("#welcome-confirm"),
 };
 
@@ -637,11 +643,23 @@ function closeImageViewer() {
 }
 
 function openWelcomeDialog() {
+  state.welcomeStep = 1;
+  renderWelcomeStep();
   openDialog(els.welcomeDialog);
 }
 
 function closeWelcomeDialog() {
   closeDialog(els.welcomeDialog);
+}
+
+function renderWelcomeStep() {
+  const onFirstStep = state.welcomeStep === 1;
+  els.welcomeTitle.textContent = onFirstStep ? "Antes de comenzar" : "Cómo funciona esta demo";
+  els.welcomeStep1.classList.toggle("hidden", !onFirstStep);
+  els.welcomeStep2.classList.toggle("hidden", onFirstStep);
+  els.welcomeBack.classList.toggle("hidden", onFirstStep);
+  els.welcomeNext.classList.toggle("hidden", !onFirstStep);
+  els.welcomeConfirm.classList.toggle("hidden", onFirstStep);
 }
 
 function changeImageZoom(delta) {
@@ -991,6 +1009,14 @@ function bindEvents() {
   els.questionCancel.addEventListener("click", closeStudentQuestionDialog);
   els.questionForm.addEventListener("submit", saveStudentQuestion);
   els.welcomeClose.addEventListener("click", closeWelcomeDialog);
+  els.welcomeBack.addEventListener("click", () => {
+    state.welcomeStep = 1;
+    renderWelcomeStep();
+  });
+  els.welcomeNext.addEventListener("click", () => {
+    state.welcomeStep = 2;
+    renderWelcomeStep();
+  });
   els.welcomeConfirm.addEventListener("click", closeWelcomeDialog);
 
   for (const [key, element] of [

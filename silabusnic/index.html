@@ -15,18 +15,39 @@
       <div class="editor-header">
         <div>
           <p class="section-kicker">Guía rápida</p>
-          <h2>Antes de comenzar</h2>
+          <h2 id="welcome-title">Antes de comenzar</h2>
         </div>
         <button id="welcome-close" class="editor-close" type="button">Cerrar</button>
       </div>
-      <p class="welcome-copy">
-        Para usar el portal, sigue los pasos en este orden: <strong>1. Carrera</strong>, <strong>2. Año</strong> y <strong>3. Acceso</strong>.
-      </p>
-      <p class="welcome-copy">
-        El <strong>Paso 3</strong> está configurado solo para demostración con nombres de estudiantes y profesores. En la versión en vivo, el acceso requerirá credenciales de inicio de sesión.
-      </p>
+      <div id="welcome-step-1" class="welcome-step">
+        <p class="welcome-copy">
+          Para usar el portal, sigue este orden: <strong>1. Carrera</strong>, <strong>2. Año</strong> y <strong>3. Acceso</strong>.
+        </p>
+        <p class="welcome-copy">
+          El <strong>Paso 3</strong> funciona solo como demostración con nombres de estudiantes y profesores.
+        </p>
+        <p class="welcome-copy">
+          En la versión en vivo, el acceso requerirá credenciales de inicio de sesión.
+        </p>
+      </div>
+      <div id="welcome-step-2" class="welcome-step hidden">
+        <p class="welcome-copy">
+          La app está optimizada para móvil, pero puede usarse en cualquier dispositivo.
+        </p>
+        <p class="welcome-copy">
+          Está pensada para estudiantes, padres y profesores.
+        </p>
+        <p class="welcome-copy">
+          En esta demo, el estudiante puede marcar materiales adquiridos o pendientes.
+        </p>
+        <p class="welcome-copy">
+          El profesor puede editar materiales, cambiar imágenes y actualizar descripciones.
+        </p>
+      </div>
       <div class="editor-actions">
-        <button id="welcome-confirm" class="primary" type="button">Entendido</button>
+        <button id="welcome-back" class="secondary hidden" type="button">Anterior</button>
+        <button id="welcome-next" class="primary" type="button">Siguiente</button>
+        <button id="welcome-confirm" class="primary hidden" type="button">Entendido</button>
       </div>
     </div>
   </dialog>

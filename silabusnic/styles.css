@@ -64,6 +64,10 @@ dialog:not([open]) {
   line-height: 1.6;
 }
 
+.welcome-step {
+  min-height: 180px;
+}
+
 .shell {
   width: min(1240px, calc(100% - 28px));
   margin: 0 auto;
