@@ -188,6 +188,7 @@
           <label id="professor-login-card" class="login-card hidden">
             <span>Ingreso de profesor</span>
             <select id="professor-select"></select>
+            <button id="add-material-button" class="secondary" type="button">Agregar material</button>
           </label>
           <article class="login-card professor-card" id="role-summary">
             <span>Permisos actuales</span>
@@ -409,23 +410,35 @@
         </label>
         <label>
           Presentacion
-          <input id="editor-presentation" name="presentation" type="text" />
+          <select id="editor-presentation" name="presentation"></select>
         </label>
         <label>
           Cantidad
           <input id="editor-quantity" name="quantity" type="text" />
         </label>
         <label>
+          Asignatura
+          <select id="editor-subject" name="subject"></select>
+        </label>
+        <label>
+          Semestre
+          <select id="editor-semester" name="semester"></select>
+        </label>
+        <label>
+          Parcial
+          <select id="editor-midterm" name="midterm"></select>
+        </label>
+        <label>
           Ubicacion
-          <input id="editor-location" name="location" type="text" />
+          <select id="editor-location" name="location"></select>
         </label>
         <label>
           Tipo
-          <input id="editor-type" name="type" type="text" />
+          <select id="editor-type" name="type"></select>
         </label>
         <label>
           Compra
-          <input id="editor-purchase" name="purchaseFrequency" type="text" />
+          <select id="editor-purchase" name="purchaseFrequency"></select>
         </label>
         <label class="editor-full">
           Imagen URL

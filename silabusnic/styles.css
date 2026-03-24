@@ -859,6 +859,7 @@ h1 {
 }
 
 .editor-grid input,
+.editor-grid select,
 .editor-grid textarea {
   width: 100%;
   border: 1px solid var(--line);

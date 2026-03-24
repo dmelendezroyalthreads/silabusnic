@@ -5,6 +5,7 @@ const state = {
   imageZoom: 1,
   welcomeStep: 1,
   catalog: null,
+  customMaterials: [],
   filters: {
     career: "",
     year: "",
@@ -71,6 +72,7 @@ const els = {
   professorLoginCard: document.querySelector("#professor-login-card"),
   studentSelect: document.querySelector("#student-select"),
   professorSelect: document.querySelector("#professor-select"),
+  addMaterialButton: document.querySelector("#add-material-button"),
   careerFilter: document.querySelector("#career-filter"),
   yearFilter: document.querySelector("#year-filter"),
   searchInput: document.querySelector("#search-input"),
@@ -110,6 +112,9 @@ const els = {
   editorName: document.querySelector("#editor-name"),
   editorPresentation: document.querySelector("#editor-presentation"),
   editorQuantity: document.querySelector("#editor-quantity"),
+  editorSubject: document.querySelector("#editor-subject"),
+  editorSemester: document.querySelector("#editor-semester"),
+  editorMidterm: document.querySelector("#editor-midterm"),
   editorLocation: document.querySelector("#editor-location"),
   editorType: document.querySelector("#editor-type"),
   editorPurchase: document.querySelector("#editor-purchase"),
@@ -160,6 +165,10 @@ function professorStorageKey(professorId) {
 
 function questionsStorageKey() {
   return "silabusnic-student-questions";
+}
+
+function customMaterialsStorageKey() {
+  return "silabusnic-custom-materials";
 }
 
 function getSelectedStudent() {
@@ -215,6 +224,12 @@ async function loadCatalog() {
     throw new Error("Unable to load materials catalog.");
   }
   state.catalog = await response.json();
+  try {
+    state.customMaterials = JSON.parse(localStorage.getItem(customMaterialsStorageKey()) || "[]");
+  } catch {
+    state.customMaterials = [];
+  }
+  state.catalog.materials = [...state.catalog.materials, ...state.customMaterials];
   state.selectedStudentId = state.catalog.students[0]?.id || "";
   state.selectedProfessorId = state.catalog.professors?.[0]?.id || "";
 
@@ -246,6 +261,22 @@ function fillSelect(select, values, allLabel) {
   }
 
   select.value = values.includes(current) ? current : "";
+}
+
+function fillEditorSelect(select, values, selectedValue = "") {
+  const options = [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+  select.innerHTML = "";
+  for (const value of options) {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = value;
+    select.append(option);
+  }
+  if (selectedValue && options.includes(selectedValue)) {
+    select.value = selectedValue;
+  } else if (options.length) {
+    select.value = options[0];
+  }
 }
 
 function populateYearOptions() {
@@ -305,6 +336,46 @@ function populateControls() {
   fillSelect(els.midtermFilter, [...new Set(materials.map((item) => item.midterm))].sort(), "Todos los parciales");
   fillSelect(els.subjectFilter, [...new Set(materials.map((item) => item.subject))].sort(), "Todas las asignaturas");
   fillSelect(els.typeFilter, [...new Set(materials.map((item) => item.type))].sort(), "Todos los tipos");
+  populateEditorOptions();
+}
+
+function populateEditorOptions(currentItem = null) {
+  const materials = state.catalog.materials;
+  fillEditorSelect(
+    els.editorPresentation,
+    [...materials.map((item) => item.presentation), currentItem?.presentation || ""],
+    currentItem?.presentation || ""
+  );
+  fillEditorSelect(
+    els.editorLocation,
+    [...materials.map((item) => item.location), currentItem?.location || ""],
+    currentItem?.location || ""
+  );
+  fillEditorSelect(
+    els.editorType,
+    [...materials.map((item) => item.type), currentItem?.type || ""],
+    currentItem?.type || ""
+  );
+  fillEditorSelect(
+    els.editorPurchase,
+    [...materials.map((item) => item.purchaseFrequency), currentItem?.purchaseFrequency || ""],
+    currentItem?.purchaseFrequency || ""
+  );
+  fillEditorSelect(
+    els.editorSubject,
+    [...materials.map((item) => item.subject), currentItem?.subject || ""],
+    currentItem?.subject || ""
+  );
+  fillEditorSelect(
+    els.editorSemester,
+    [...materials.map((item) => item.semester), currentItem?.semester || ""],
+    currentItem?.semester || ""
+  );
+  fillEditorSelect(
+    els.editorMidterm,
+    [...materials.map((item) => item.midterm), currentItem?.midterm || ""],
+    currentItem?.midterm || ""
+  );
 }
 
 function renderProgramStats() {
@@ -591,6 +662,10 @@ function persistProfessorActivity() {
     professorStorageKey(state.selectedProfessorId),
     JSON.stringify(getProfessorActivity())
   );
+}
+
+function persistCustomMaterials() {
+  localStorage.setItem(customMaterialsStorageKey(), JSON.stringify(state.customMaterials));
 }
 
 function renderProfessorStats() {
@@ -926,16 +1001,49 @@ function renderMaterials() {
 function openProfessorEditor(item) {
   const record = getProfessorRecord(item.id);
   const displayItem = record.draft ? { ...item, ...record.draft } : item;
+  els.editorDialog.dataset.mode = "edit";
   els.editorDialog.dataset.materialId = item.id;
+  populateEditorOptions(displayItem);
   els.editorTitle.textContent = `${item.id} • ${displayItem.name}`;
   els.editorName.value = displayItem.name || "";
-  els.editorPresentation.value = displayItem.presentation || "";
   els.editorQuantity.value = displayItem.quantity || "";
-  els.editorLocation.value = displayItem.location || "";
-  els.editorType.value = displayItem.type || "";
-  els.editorPurchase.value = displayItem.purchaseFrequency || "";
+  els.editorSubject.value = displayItem.subject || els.editorSubject.value;
+  els.editorSemester.value = displayItem.semester || els.editorSemester.value;
+  els.editorMidterm.value = displayItem.midterm || els.editorMidterm.value;
+  els.editorPresentation.value = displayItem.presentation || els.editorPresentation.value;
+  els.editorLocation.value = displayItem.location || els.editorLocation.value;
+  els.editorType.value = displayItem.type || els.editorType.value;
+  els.editorPurchase.value = displayItem.purchaseFrequency || els.editorPurchase.value;
   els.editorImage.value = displayItem.image || "";
   els.editorNotes.value = displayItem.notes || "";
+  els.editorDialog.showModal();
+}
+
+function openAddMaterialDialog() {
+  const templateMaterial = {
+    subject: cohortMaterials()[0]?.subject || state.catalog.materials[0]?.subject || "",
+    semester: cohortMaterials()[0]?.semester || state.catalog.materials[0]?.semester || "",
+    midterm: cohortMaterials()[0]?.midterm || state.catalog.materials[0]?.midterm || "",
+    presentation: state.catalog.materials[0]?.presentation || "",
+    location: state.catalog.materials[0]?.location || "",
+    type: state.catalog.materials[0]?.type || "",
+    purchaseFrequency: state.catalog.materials[0]?.purchaseFrequency || "",
+  };
+  els.editorDialog.dataset.mode = "create";
+  delete els.editorDialog.dataset.materialId;
+  populateEditorOptions(templateMaterial);
+  els.editorTitle.textContent = "Nuevo material";
+  els.editorName.value = "";
+  els.editorQuantity.value = "1";
+  els.editorSubject.value = templateMaterial.subject || els.editorSubject.value;
+  els.editorSemester.value = templateMaterial.semester || els.editorSemester.value;
+  els.editorMidterm.value = templateMaterial.midterm || els.editorMidterm.value;
+  els.editorPresentation.value = templateMaterial.presentation || els.editorPresentation.value;
+  els.editorLocation.value = templateMaterial.location || els.editorLocation.value;
+  els.editorType.value = templateMaterial.type || els.editorType.value;
+  els.editorPurchase.value = templateMaterial.purchaseFrequency || els.editorPurchase.value;
+  els.editorImage.value = "";
+  els.editorNotes.value = "";
   els.editorDialog.showModal();
 }
 
@@ -962,12 +1070,16 @@ function closeStudentQuestionDialog() {
 
 function saveProfessorEdit(event) {
   event.preventDefault();
+  const mode = els.editorDialog.dataset.mode || "edit";
   const materialId = els.editorDialog.dataset.materialId;
-  if (!materialId || !state.selectedProfessorId) {
+  if (!state.selectedProfessorId) {
     return;
   }
   const draft = {
     name: els.editorName.value.trim(),
+    subject: els.editorSubject.value.trim(),
+    semester: els.editorSemester.value.trim(),
+    midterm: els.editorMidterm.value.trim(),
     presentation: els.editorPresentation.value.trim(),
     quantity: els.editorQuantity.value.trim(),
     location: els.editorLocation.value.trim(),
@@ -976,6 +1088,34 @@ function saveProfessorEdit(event) {
     image: els.editorImage.value.trim(),
     notes: els.editorNotes.value.trim(),
   };
+  if (mode === "create") {
+    const newMaterial = {
+      id: `P${Date.now().toString().slice(-8)}`,
+      suggestedBrand: "",
+      system: "",
+      career: state.filters.career,
+      year: state.filters.year,
+      ownership: "Individual",
+      timing: "Inmediato",
+      otherSubjects: "",
+      studentStatus: "pending",
+      downloadSource: "./data/MATERIALES ODONTOLOGIA.xlsx",
+      ...draft,
+    };
+    state.customMaterials.push(newMaterial);
+    state.catalog.materials.push(newMaterial);
+    persistCustomMaterials();
+    populateControls();
+    closeProfessorEditor();
+    renderProgramStats();
+    renderSubjectSummary();
+    renderProfessorStats();
+    renderMaterials();
+    return;
+  }
+  if (!materialId) {
+    return;
+  }
   setProfessorRecord(materialId, {
     status: "updated",
     draft,
@@ -1079,6 +1219,13 @@ function bindEvents() {
     state.selectedProfessorId = event.target.value;
     renderProfessorStats();
     renderMaterials();
+  });
+
+  els.addMaterialButton.addEventListener("click", () => {
+    if (!state.selectedProfessorId) {
+      return;
+    }
+    openAddMaterialDialog();
   });
 
   els.editorClose.addEventListener("click", closeProfessorEditor);
