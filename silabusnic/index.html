@@ -260,9 +260,9 @@
 
   <template id="material-template">
     <article class="material-card">
-      <div class="material-image-wrap">
+      <button class="material-image-wrap material-image-button" type="button" aria-label="Ampliar imagen del material">
         <img class="material-image" src="./assets/logo.png" alt="Material placeholder" />
-      </div>
+      </button>
       <div class="material-body">
         <div class="material-topline">
           <span class="course-pill material-code"></span>
@@ -335,6 +335,25 @@
         <button id="editor-save" class="primary" type="submit">Guardar cambios</button>
       </div>
     </form>
+  </dialog>
+
+  <dialog id="image-viewer" class="image-viewer-dialog">
+    <div class="image-viewer">
+      <div class="image-viewer-header">
+        <div>
+          <p class="section-kicker">Vista ampliada</p>
+          <h3 id="image-viewer-title">Material</h3>
+        </div>
+        <div class="image-viewer-actions">
+          <button id="image-zoom-out" class="secondary" type="button" aria-label="Alejar imagen">-</button>
+          <button id="image-zoom-in" class="secondary" type="button" aria-label="Acercar imagen">+</button>
+          <button id="image-viewer-close" class="editor-close" type="button">Cerrar</button>
+        </div>
+      </div>
+      <div class="image-viewer-frame">
+        <img id="image-viewer-img" src="./assets/logo.png" alt="Vista ampliada del material" />
+      </div>
+    </div>
   </dialog>
 
   <script src="./app.js"></script>
