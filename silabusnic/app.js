@@ -750,6 +750,7 @@ function renderWelcomeStep() {
   els.welcomeBack.classList.toggle("hidden", onFirstStep);
   els.welcomeNext.classList.toggle("hidden", onThirdStep);
   els.welcomeConfirm.classList.toggle("hidden", !onThirdStep);
+  els.welcomeClose.classList.toggle("hidden", !onThirdStep);
 }
 
 function changeImageZoom(delta) {
