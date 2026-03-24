@@ -33,6 +33,11 @@ a {
   font: inherit;
 }
 
+dialog:not([open]) {
+  display: none;
+  pointer-events: none;
+}
+
 .shell {
   width: min(1240px, calc(100% - 28px));
   margin: 0 auto;
