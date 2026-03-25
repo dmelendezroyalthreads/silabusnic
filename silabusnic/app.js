@@ -1111,10 +1111,16 @@ function openStudentQuestionDialog(item) {
   const selectedStudent = getSelectedStudent();
   els.questionDialog.dataset.materialId = item.id;
   els.questionTitle.textContent = `${item.id} • ${item.name}`;
-  els.questionMaterialThumb.src = materialImage(item);
-  els.questionMaterialThumb.alt = `Vista previa de ${item.name}`;
-  els.questionMaterialId.textContent = `Material ${item.id}`;
-  els.questionMaterialDescription.textContent = `${item.name} • ${item.subject} • ${item.presentation || "Sin presentación"}`;
+  if (els.questionMaterialThumb) {
+    els.questionMaterialThumb.src = materialImage(item);
+    els.questionMaterialThumb.alt = `Vista previa de ${item.name}`;
+  }
+  if (els.questionMaterialId) {
+    els.questionMaterialId.textContent = `Material ${item.id}`;
+  }
+  if (els.questionMaterialDescription) {
+    els.questionMaterialDescription.textContent = `${item.name} • ${item.subject} • ${item.presentation || "Sin presentación"}`;
+  }
   els.questionCarnet.value = selectedStudent?.carnet || "";
   els.questionName.value = selectedStudent?.name || "";
   els.questionEmail.value = selectedStudent?.email || "";
@@ -1123,8 +1129,12 @@ function openStudentQuestionDialog(item) {
   els.questionFeedback.classList.remove("hidden");
   openDialog(els.questionDialog);
   const cursorPosition = els.questionBody.value.length;
-  els.questionBody.focus();
-  els.questionBody.setSelectionRange(cursorPosition, cursorPosition);
+  setTimeout(() => {
+    els.questionBody.focus();
+    if (typeof els.questionBody.setSelectionRange === "function") {
+      els.questionBody.setSelectionRange(cursorPosition, cursorPosition);
+    }
+  }, 0);
 }
 
 function closeStudentQuestionDialog() {

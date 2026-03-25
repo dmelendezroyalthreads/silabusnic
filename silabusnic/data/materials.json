@@ -6,16 +6,22 @@
     {
       "id": "student-001",
       "name": "Andrea Ruiz",
+      "carnet": "2026-OD-3001",
+      "email": "andrea.ruiz@unica.com.ni.demo",
       "group": "3rd Year Odontology"
     },
     {
       "id": "student-002",
       "name": "Luis Herrera",
+      "carnet": "2026-OD-3002",
+      "email": "luis.herrera@unica.com.ni.demo",
       "group": "3rd Year Odontology"
     },
     {
       "id": "student-003",
       "name": "Camila Soto",
+      "carnet": "2026-OD-3003",
+      "email": "camila.soto@unica.com.ni.demo",
       "group": "3rd Year Odontology"
     }
   ],
@@ -23,16 +29,22 @@
     {
       "id": "professor-001",
       "name": "Dra. Lucía Navarro",
+      "carnet": "DOC-OD-1001",
+      "email": "lucia.navarro@unica.com.ni.demo",
       "department": "Odontologia"
     },
     {
       "id": "professor-002",
       "name": "Dr. Andrés Castillo",
+      "carnet": "DOC-OD-1002",
+      "email": "andres.castillo@unica.com.ni.demo",
       "department": "Odontologia"
     },
     {
       "id": "professor-003",
       "name": "Dra. Verónica Salazar",
+      "carnet": "DOC-OD-1003",
+      "email": "veronica.salazar@unica.com.ni.demo",
       "department": "Odontologia"
     }
   ],
