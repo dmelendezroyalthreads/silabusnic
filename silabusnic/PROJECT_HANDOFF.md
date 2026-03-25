@@ -17,7 +17,7 @@
 
 - Mobile-first experience
 - Header title: `SILABUS PORTAL 2026`
-- Subtitle: `Powered by E&D Technology`
+- Subtitle: `Powered by E&D Technologies`
 - Career and year must be selected before data access
 - Role flow is step-based:
   - Paso 1: Carrera
