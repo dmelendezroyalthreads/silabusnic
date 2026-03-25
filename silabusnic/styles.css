@@ -136,12 +136,27 @@ dialog:not([open]) {
   display: flex;
   align-items: center;
   gap: 16px;
+}
+
+.brand-logo-shell,
+.brand-copy-shell {
   background: rgba(255, 251, 245, 0.76);
   border: 1px solid rgba(255, 255, 255, 0.68);
-  border-radius: 999px;
-  padding: 10px 18px 10px 10px;
   box-shadow: var(--shadow);
   backdrop-filter: blur(10px);
+}
+
+.brand-logo-shell {
+  border-radius: 999px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-copy-shell {
+  border-radius: 28px;
+  padding: 14px 18px;
 }
 
 .brand-logo {
@@ -156,6 +171,8 @@ dialog:not([open]) {
 .brand-copy {
   display: grid;
   gap: 4px;
+  text-align: center;
+  justify-items: center;
 }
 
 .header-selects {
@@ -209,6 +226,8 @@ dialog:not([open]) {
 .brand-name {
   font-size: 1.22rem;
   font-weight: 700;
+  font-family: "Segoe UI", "Segoe UI Variable", "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: 0.02em;
 }
 
 .brand-tagline {
