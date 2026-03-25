@@ -826,8 +826,9 @@ h1 {
 }
 
 .toggle-acquired.acquired {
-  background: rgba(17, 46, 87, 0.1);
-  border-color: rgba(17, 46, 87, 0.16);
+  background: rgba(97, 170, 112, 0.2);
+  border-color: rgba(97, 170, 112, 0.45);
+  color: #245430;
 }
 
 .summary-list article {

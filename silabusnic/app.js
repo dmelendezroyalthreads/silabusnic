@@ -850,7 +850,7 @@ function persistStudentQuestion(entry) {
 
 function materialDetails(item) {
   const details = [
-    `Cantidad aproximada: ${item.quantity || "N/D"}`,
+    `Cantidad: ${item.quantity || "N/D"}`,
     `Presentacion: ${item.presentation || "N/D"}`,
     `Area de Uso: ${item.location || "N/D"}`,
     `Compra: ${item.purchaseFrequency || "N/D"}`,
