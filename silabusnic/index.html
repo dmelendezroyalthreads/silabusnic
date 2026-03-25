@@ -580,6 +580,17 @@
           <legend>Asignatura relacionada con la consulta</legend>
           <div id="question-classes-list" class="question-classes-list"></div>
         </fieldset>
+        <div class="editor-full editor-image-upload">
+          <span>Imagen adicional para la consulta (opcional)</span>
+          <div class="editor-image-preview">
+            <img id="question-image-preview" src="./assets/logo.png" alt="Vista previa de la imagen adjunta" />
+            <div class="editor-image-copy">
+              <strong>Adjuntar imagen para este demo</strong>
+              <p>Opcionalmente puedes subir una foto relacionada con tu consulta en este navegador.</p>
+            </div>
+          </div>
+          <input id="question-image-file" name="questionImageFile" type="file" accept="image/*" />
+        </div>
         <label class="editor-full">
           Pregunta
           <textarea id="question-body" name="question" rows="6" placeholder="Escribe tu duda sobre este material." required></textarea>

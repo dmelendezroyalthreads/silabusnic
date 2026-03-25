@@ -5,6 +5,7 @@ const state = {
   imageZoom: 1,
   welcomeStep: 1,
   editorImageValue: "",
+  questionImageValue: "",
   catalog: null,
   customMaterials: [],
   filters: {
@@ -143,6 +144,8 @@ const els = {
   questionName: document.querySelector("#question-name"),
   questionEmail: document.querySelector("#question-email"),
   questionClassesList: document.querySelector("#question-classes-list"),
+  questionImageFile: document.querySelector("#question-image-file"),
+  questionImagePreview: document.querySelector("#question-image-preview"),
   questionBody: document.querySelector("#question-body"),
   questionFeedback: document.querySelector("#question-feedback"),
   questionMaterialThumb: document.querySelector("#question-material-thumb"),
@@ -707,6 +710,12 @@ function updateEditorImagePreview(src) {
   els.editorImagePreview.alt = src ? "Vista previa de imagen cargada" : "Vista previa de imagen por defecto";
 }
 
+function updateQuestionImagePreview(src) {
+  const previewSrc = src || "./assets/logo.png";
+  els.questionImagePreview.src = previewSrc;
+  els.questionImagePreview.alt = src ? "Vista previa de imagen adjunta" : "Vista previa de imagen por defecto";
+}
+
 function svgDataUri(svg) {
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
@@ -1161,6 +1170,19 @@ function handleEditorImageUpload(event) {
   reader.readAsDataURL(file);
 }
 
+function handleQuestionImageUpload(event) {
+  const file = event.target.files?.[0];
+  if (!file) {
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    state.questionImageValue = typeof reader.result === "string" ? reader.result : "";
+    updateQuestionImagePreview(state.questionImageValue);
+  };
+  reader.readAsDataURL(file);
+}
+
 function openStudentQuestionDialog(item) {
   const selectedStudent = getSelectedStudent();
   els.questionDialog.dataset.materialId = item.id;
@@ -1179,6 +1201,9 @@ function openStudentQuestionDialog(item) {
   els.questionName.value = selectedStudent?.name || "";
   els.questionEmail.value = selectedStudent?.email || "";
   populateQuestionClasses(item);
+  state.questionImageValue = "";
+  els.questionImageFile.value = "";
+  updateQuestionImagePreview("");
   els.questionBody.value = `Material: ${item.id} - ${item.name}\nDescripción: ${item.subject} • ${item.presentation || "Sin presentación"}\n\nPregunta:\n`;
   els.questionFeedback.textContent = "En la versión en vivo, los usuarios deberán iniciar sesión con sus credenciales institucionales de estudiante o profesor antes de enviar consultas.";
   els.questionFeedback.classList.remove("hidden");
@@ -1271,6 +1296,7 @@ function saveStudentQuestion(event) {
     name: els.questionName.value.trim(),
     replyEmail: els.questionEmail.value.trim(),
     relatedClasses: [...document.querySelectorAll('input[name="relatedClasses"]:checked')].map((input) => input.value),
+    attachmentImage: state.questionImageValue,
     question: els.questionBody.value.trim(),
     createdAt: new Date().toISOString(),
   };
@@ -1373,6 +1399,7 @@ function bindEvents() {
   els.questionClose.addEventListener("click", closeStudentQuestionDialog);
   els.questionCancel.addEventListener("click", closeStudentQuestionDialog);
   els.questionForm.addEventListener("submit", saveStudentQuestion);
+  els.questionImageFile.addEventListener("change", handleQuestionImageUpload);
   els.welcomeClose.addEventListener("click", closeWelcomeDialog);
   els.welcomeBack.addEventListener("click", () => {
     state.welcomeStep = Math.max(1, state.welcomeStep - 1);
