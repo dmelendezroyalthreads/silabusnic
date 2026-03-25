@@ -142,6 +142,9 @@ const els = {
   questionEmail: document.querySelector("#question-email"),
   questionBody: document.querySelector("#question-body"),
   questionFeedback: document.querySelector("#question-feedback"),
+  questionMaterialThumb: document.querySelector("#question-material-thumb"),
+  questionMaterialId: document.querySelector("#question-material-id"),
+  questionMaterialDescription: document.querySelector("#question-material-description"),
   welcomeDialog: document.querySelector("#welcome-dialog"),
   welcomeTitle: document.querySelector("#welcome-title"),
   welcomeStep1: document.querySelector("#welcome-step-1"),
@@ -1108,13 +1111,20 @@ function openStudentQuestionDialog(item) {
   const selectedStudent = getSelectedStudent();
   els.questionDialog.dataset.materialId = item.id;
   els.questionTitle.textContent = `${item.id} • ${item.name}`;
-  els.questionCarnet.value = "";
+  els.questionMaterialThumb.src = materialImage(item);
+  els.questionMaterialThumb.alt = `Vista previa de ${item.name}`;
+  els.questionMaterialId.textContent = `Material ${item.id}`;
+  els.questionMaterialDescription.textContent = `${item.name} • ${item.subject} • ${item.presentation || "Sin presentación"}`;
+  els.questionCarnet.value = selectedStudent?.carnet || "";
   els.questionName.value = selectedStudent?.name || "";
-  els.questionEmail.value = "";
-  els.questionBody.value = "";
-  els.questionFeedback.textContent = "En la versión en vivo validaremos el número de carnet antes del envío.";
+  els.questionEmail.value = selectedStudent?.email || "";
+  els.questionBody.value = `Material: ${item.id} - ${item.name}\nDescripción: ${item.subject} • ${item.presentation || "Sin presentación"}\n\nPregunta:\n`;
+  els.questionFeedback.textContent = "En la versión en vivo, los usuarios deberán iniciar sesión con sus credenciales institucionales de estudiante o profesor antes de enviar consultas.";
   els.questionFeedback.classList.remove("hidden");
   openDialog(els.questionDialog);
+  const cursorPosition = els.questionBody.value.length;
+  els.questionBody.focus();
+  els.questionBody.setSelectionRange(cursorPosition, cursorPosition);
 }
 
 function closeStudentQuestionDialog() {
