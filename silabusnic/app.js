@@ -454,7 +454,7 @@ function exportSubjectAsXls(subject) {
     "Año",
     "Semestre",
     "Parcial",
-    "Ubicacion",
+    "Area de Uso",
     "Tipo",
     "Compra",
     "Observaciones",
@@ -852,7 +852,7 @@ function materialDetails(item) {
   const details = [
     `Cantidad aproximada: ${item.quantity || "N/D"}`,
     `Presentacion: ${item.presentation || "N/D"}`,
-    `Ubicacion: ${item.location || "N/D"}`,
+    `Area de Uso: ${item.location || "N/D"}`,
     `Compra: ${item.purchaseFrequency || "N/D"}`,
   ];
   return details.map((detail) => `<span>${detail}</span>`).join("");
@@ -945,7 +945,7 @@ function renderMaterials() {
       `${displayItem.subject} • ${displayItem.ownership || "Individual"} • ${displayItem.timing || "N/D"}`;
     node.querySelector(".tag-semester").textContent = displayItem.semester;
     node.querySelector(".tag-midterm").textContent = `Parcial ${displayItem.midterm}`;
-    node.querySelector(".tag-location").textContent = displayItem.location || "Ubicacion pendiente";
+    node.querySelector(".tag-location").textContent = displayItem.location || "Area de uso pendiente";
     node.querySelector(".material-notes").textContent =
       displayItem.notes || displayItem.otherSubjects || "Aun no hay observaciones del profesor para este material.";
     node.querySelector(".material-details").innerHTML = materialDetails(displayItem);
