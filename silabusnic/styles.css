@@ -136,11 +136,7 @@ dialog:not([open]) {
   display: flex;
   align-items: center;
   gap: 16px;
-}
-
-.brand-logo-stack {
-  display: grid;
-  gap: 10px;
+  flex-wrap: nowrap;
 }
 
 .brand-logo-shell,
@@ -166,6 +162,8 @@ dialog:not([open]) {
 .brand-copy-shell {
   border-radius: 28px;
   padding: 12px 18px;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .brand-logo {
@@ -1072,9 +1070,30 @@ h1 {
   }
 
   .brand-lockup {
-    border-radius: 24px;
-    padding-right: 14px;
-    align-items: flex-start;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .brand-logo {
+    width: 72px;
+    height: 72px;
+  }
+
+  .brand-logo-secondary {
+    width: 60px;
+    height: 60px;
+  }
+
+  .brand-copy-shell {
+    padding: 10px 12px;
+  }
+
+  .brand-name {
+    font-size: 0.9rem;
+  }
+
+  .brand-tagline {
+    font-size: 0.66rem;
   }
 
   .topbar-actions {
