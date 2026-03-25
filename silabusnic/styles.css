@@ -242,7 +242,7 @@ dialog:not([open]) {
 }
 
 .brand-name {
-  font-size: 1.32rem;
+  font-size: 1.48rem;
   font-weight: 700;
   font-family: "Segoe UI", "Segoe UI Variable", "Helvetica Neue", Arial, sans-serif;
   letter-spacing: 0.02em;
@@ -252,7 +252,7 @@ dialog:not([open]) {
 
 .brand-tagline {
   color: var(--muted);
-  font-size: 0.92rem;
+  font-size: 1rem;
   line-height: 1.2;
   white-space: nowrap;
 }
@@ -1150,11 +1150,11 @@ h1 {
   }
 
   .brand-name {
-    font-size: 0.98rem;
+    font-size: 1.06rem;
   }
 
   .brand-tagline {
-    font-size: 0.74rem;
+    font-size: 0.8rem;
   }
 
   .topbar-actions {
