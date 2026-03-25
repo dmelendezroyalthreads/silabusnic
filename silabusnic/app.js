@@ -147,6 +147,7 @@ const els = {
   welcomeStep1: document.querySelector("#welcome-step-1"),
   welcomeStep2: document.querySelector("#welcome-step-2"),
   welcomeStep3: document.querySelector("#welcome-step-3"),
+  welcomeStep4: document.querySelector("#welcome-step-4"),
   welcomeClose: document.querySelector("#welcome-close"),
   welcomeBack: document.querySelector("#welcome-back"),
   welcomeNext: document.querySelector("#welcome-next"),
@@ -820,19 +821,23 @@ function renderWelcomeStep() {
   const onFirstStep = state.welcomeStep === 1;
   const onSecondStep = state.welcomeStep === 2;
   const onThirdStep = state.welcomeStep === 3;
+  const onFourthStep = state.welcomeStep === 4;
 
   els.welcomeTitle.textContent = onFirstStep
     ? "Antes de comenzar"
     : onSecondStep
       ? "Cómo funciona esta demo"
-      : "Consultas y acceso institucional";
+      : onThirdStep
+        ? "Consultas y acceso institucional"
+        : "Acciones dentro de cada material";
   els.welcomeStep1.classList.toggle("hidden", !onFirstStep);
   els.welcomeStep2.classList.toggle("hidden", !onSecondStep);
   els.welcomeStep3.classList.toggle("hidden", !onThirdStep);
+  els.welcomeStep4.classList.toggle("hidden", !onFourthStep);
   els.welcomeBack.classList.toggle("hidden", onFirstStep);
-  els.welcomeNext.classList.toggle("hidden", onThirdStep);
-  els.welcomeConfirm.classList.toggle("hidden", !onThirdStep);
-  els.welcomeClose.classList.toggle("hidden", !onThirdStep);
+  els.welcomeNext.classList.toggle("hidden", onFourthStep);
+  els.welcomeConfirm.classList.toggle("hidden", !onFourthStep);
+  els.welcomeClose.classList.toggle("hidden", !onFourthStep);
 }
 
 function changeImageZoom(delta) {
@@ -1297,7 +1302,7 @@ function bindEvents() {
     renderWelcomeStep();
   });
   els.welcomeNext.addEventListener("click", () => {
-    state.welcomeStep = Math.min(3, state.welcomeStep + 1);
+    state.welcomeStep = Math.min(4, state.welcomeStep + 1);
     renderWelcomeStep();
   });
   els.welcomeConfirm.addEventListener("click", closeWelcomeDialog);
