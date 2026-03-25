@@ -88,11 +88,34 @@ dialog:not([open]) {
   margin-top: 26px;
 }
 
+.footer-stack {
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+  width: min(840px, 100%);
+}
+
 .language-selector {
   display: grid;
   gap: 6px;
   font-size: 0.9rem;
   color: var(--muted);
+}
+
+.legal-disclaimer {
+  display: grid;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 251, 245, 0.76);
+  border: 1px solid rgba(17, 46, 87, 0.08);
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.legal-disclaimer p {
+  margin: 0;
 }
 
 .language-selector select {
