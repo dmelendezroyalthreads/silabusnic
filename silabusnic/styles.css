@@ -1102,6 +1102,7 @@ h1 {
 
 .question-classes-list {
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   margin-top: 8px;
 }
@@ -1111,6 +1112,12 @@ h1 {
   align-items: center;
   gap: 8px;
   color: var(--ink);
+  font-size: 0.82rem;
+  line-height: 1.3;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background: rgba(17, 46, 87, 0.05);
+  border: 1px solid rgba(17, 46, 87, 0.08);
 }
 
 .editor-full {
