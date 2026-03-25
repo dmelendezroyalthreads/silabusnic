@@ -804,6 +804,31 @@ h1 {
   min-height: 2.4em;
 }
 
+.material-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.material-meta {
+  margin: 0;
+  flex: 1 1 auto;
+}
+
+.material-info-button {
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(17, 46, 87, 0.14);
+  border-radius: 999px;
+  background: rgba(17, 46, 87, 0.08);
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
 .material-notes {
   margin: 0 0 10px;
   font-size: 0.95rem;

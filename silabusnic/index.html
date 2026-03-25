@@ -385,7 +385,10 @@
           <span class="status-pill material-type"></span>
         </div>
         <h3 class="material-title"></h3>
-        <p class="material-meta"></p>
+        <div class="material-meta-row">
+          <p class="material-meta"></p>
+          <button class="material-info-button" type="button" aria-label="Ver uso y observaciones">ℹ</button>
+        </div>
         <div class="tag-row">
           <span class="tag-semester"></span>
           <span class="tag-midterm"></span>
@@ -490,6 +493,22 @@
       </div>
       <div class="image-viewer-frame">
         <img id="image-viewer-img" src="./assets/logo.png" alt="Vista ampliada del material" />
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="material-info-dialog" class="editor-dialog">
+    <div class="editor-form">
+      <div class="editor-header">
+        <div>
+          <p class="section-kicker">Información adicional</p>
+          <h3 id="material-info-title">Material</h3>
+        </div>
+        <button id="material-info-close" class="editor-close" type="button">Cerrar</button>
+      </div>
+      <div class="editor-note">
+        <p><strong>Uso:</strong> <span id="material-info-usage">N/D</span></p>
+        <p><strong>Observaciones:</strong> <span id="material-info-notes">Sin observaciones adicionales.</span></p>
       </div>
     </div>
   </dialog>

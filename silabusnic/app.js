@@ -126,6 +126,11 @@ const els = {
   imageViewerClose: document.querySelector("#image-viewer-close"),
   imageZoomIn: document.querySelector("#image-zoom-in"),
   imageZoomOut: document.querySelector("#image-zoom-out"),
+  materialInfoDialog: document.querySelector("#material-info-dialog"),
+  materialInfoTitle: document.querySelector("#material-info-title"),
+  materialInfoUsage: document.querySelector("#material-info-usage"),
+  materialInfoNotes: document.querySelector("#material-info-notes"),
+  materialInfoClose: document.querySelector("#material-info-close"),
   questionDialog: document.querySelector("#student-question-dialog"),
   questionForm: document.querySelector("#student-question-form"),
   questionTitle: document.querySelector("#question-title"),
@@ -848,6 +853,34 @@ function persistStudentQuestion(entry) {
   localStorage.setItem(questionsStorageKey(), JSON.stringify(questions));
 }
 
+function normalizedNoteText(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
+function meaningfulNotes(item) {
+  const notes = String(item.notes || "").trim();
+  if (!notes) return "";
+  if (normalizedNoteText(notes) === "se requeriran mas posteriormente") {
+    return "";
+  }
+  return notes;
+}
+
+function openMaterialInfo(item) {
+  els.materialInfoTitle.textContent = `${item.id} • ${item.name}`;
+  els.materialInfoUsage.textContent = item.timing || "N/D";
+  els.materialInfoNotes.textContent = meaningfulNotes(item) || "Sin observaciones adicionales.";
+  openDialog(els.materialInfoDialog);
+}
+
+function closeMaterialInfo() {
+  closeDialog(els.materialInfoDialog);
+}
+
 function materialDetails(item) {
   const details = [
     `Cantidad: ${item.quantity || "N/D"}`,
@@ -932,10 +965,14 @@ function renderMaterials() {
     const image = node.querySelector(".material-image");
     const imageButton = node.querySelector(".material-image-button");
     const questionButton = node.querySelector(".ask-question");
+    const infoButton = node.querySelector(".material-info-button");
     image.src = materialImage(displayItem);
     image.alt = `${displayItem.name} reference`;
     imageButton.addEventListener("click", () => {
       openImageViewer(displayItem);
+    });
+    infoButton.addEventListener("click", () => {
+      openMaterialInfo(displayItem);
     });
 
     node.querySelector(".material-code").textContent = displayItem.id;
@@ -952,8 +989,10 @@ function renderMaterials() {
     node.querySelector(".tag-semester").textContent = displayItem.semester;
     node.querySelector(".tag-midterm").textContent = `Parcial ${displayItem.midterm}`;
     node.querySelector(".tag-location").textContent = displayItem.location || "Area de uso pendiente";
-    node.querySelector(".material-notes").textContent =
-      displayItem.notes || displayItem.otherSubjects || "Aun no hay observaciones del profesor para este material.";
+    const notesText = meaningfulNotes(displayItem);
+    const notesNode = node.querySelector(".material-notes");
+    notesNode.textContent = notesText;
+    notesNode.classList.toggle("hidden", !notesText);
     node.querySelector(".material-details").innerHTML = materialDetails(displayItem);
 
     const button = node.querySelector(".toggle-acquired");
@@ -1247,6 +1286,7 @@ function bindEvents() {
       closeImageViewer();
     }
   });
+  els.materialInfoClose.addEventListener("click", closeMaterialInfo);
   els.questionClose.addEventListener("click", closeStudentQuestionDialog);
   els.questionCancel.addEventListener("click", closeStudentQuestionDialog);
   els.questionForm.addEventListener("submit", saveStudentQuestion);
