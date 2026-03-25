@@ -416,7 +416,7 @@ function renderSubjectSummary() {
 
   if (!hasRequiredHeaderSelection()) {
     const card = document.createElement("article");
-    card.innerHTML = "<strong>Sin seleccion</strong><p>Elige carrera y año para ver el resumen del archivo.</p>";
+    card.innerHTML = "<strong>Sin selección</strong><p>Elige carrera y año para ver el resumen del archivo.</p>";
     els.subjectSummary.append(card);
     return;
   }
@@ -430,7 +430,7 @@ function renderSubjectSummary() {
 
   if (!counts.size) {
     const card = document.createElement("article");
-    card.innerHTML = "<strong>Sin resultados</strong><p>No hay materiales cargados para la seleccion actual.</p>";
+    card.innerHTML = "<strong>Sin resultados</strong><p>No hay materiales cargados para la selección actual.</p>";
     els.subjectSummary.append(card);
     return;
   }
@@ -455,13 +455,13 @@ function exportSubjectAsXls(subject) {
   const headers = [
     "ID",
     "Material",
-    "Presentacion",
+    "Presentación",
     "Cantidad",
     "Asignatura",
     "Año",
     "Semestre",
     "Parcial",
-    "Area de Uso",
+    "Área de Uso",
     "Tipo",
     "Compra",
     "Observaciones",
@@ -891,8 +891,8 @@ function closeMaterialInfo() {
 function materialDetails(item) {
   const details = [
     `Cantidad: ${item.quantity || "N/D"}`,
-    `Presentacion: ${item.presentation || "N/D"}`,
-    `Area de Uso: ${item.location || "N/D"}`,
+    `Presentación: ${item.presentation || "N/D"}`,
+    `Área de Uso: ${item.location || "N/D"}`,
     `Compra: ${item.purchaseFrequency || "N/D"}`,
   ];
   return details.map((detail) => `<span>${detail}</span>`).join("");
@@ -902,7 +902,7 @@ function activeFilterEntries() {
   const entries = [
     ["Carrera", state.filters.career],
     ["Año", state.filters.year],
-    ["Busqueda", state.filters.query.trim()],
+    ["Búsqueda", state.filters.query.trim()],
     ["Semestre", state.filters.semester],
     ["Parcial", state.filters.midterm],
     ["Asignatura", state.filters.subject],
@@ -958,7 +958,7 @@ function renderMaterials() {
   }
 
   if (!careerHasCatalogData() || !yearHasCatalogData()) {
-    els.resultsSummary.textContent = "Catalogo disponible solo para Odontología 3ro.";
+    els.resultsSummary.textContent = "Catálogo disponible solo para Odontología 3ro.";
     els.emptyState.textContent = "La primera carga de materiales funciona actualmente solo cuando se selecciona Odontología en 3ro.";
     els.emptyState.classList.remove("hidden");
     return;
@@ -1112,7 +1112,7 @@ function openStudentQuestionDialog(item) {
   els.questionName.value = selectedStudent?.name || "";
   els.questionEmail.value = "";
   els.questionBody.value = "";
-  els.questionFeedback.textContent = "En la version en vivo validaremos el numero de carnet antes del envio.";
+  els.questionFeedback.textContent = "En la versión en vivo validaremos el número de carnet antes del envío.";
   els.questionFeedback.classList.remove("hidden");
   openDialog(els.questionDialog);
 }
@@ -1395,7 +1395,7 @@ async function init() {
     openWelcomeDialog();
     bindEvents();
   } catch (error) {
-    els.resultsSummary.textContent = "No se pudo cargar el catalogo de materiales.";
+    els.resultsSummary.textContent = "No se pudo cargar el catálogo de materiales.";
     els.emptyState.textContent = error.message;
     els.emptyState.classList.remove("hidden");
   }
