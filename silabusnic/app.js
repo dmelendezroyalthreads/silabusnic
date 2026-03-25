@@ -451,7 +451,7 @@ function exportSubjectAsXls(subject) {
     "Presentacion",
     "Cantidad",
     "Asignatura",
-    "Ano",
+    "Año",
     "Semestre",
     "Parcial",
     "Ubicacion",
@@ -861,7 +861,7 @@ function materialDetails(item) {
 function activeFilterEntries() {
   const entries = [
     ["Carrera", state.filters.career],
-    ["Ano", state.filters.year],
+    ["Año", state.filters.year],
     ["Busqueda", state.filters.query.trim()],
     ["Semestre", state.filters.semester],
     ["Parcial", state.filters.midterm],
