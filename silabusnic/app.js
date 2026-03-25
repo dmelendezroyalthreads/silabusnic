@@ -982,7 +982,7 @@ function renderMaterials() {
         openStudentQuestionDialog(displayItem);
       });
       const acquired = isAcquired(item.id);
-      button.textContent = acquired ? "Adquirido" : "Marcar como adquirido";
+      button.textContent = acquired ? "👍 Adquirido" : "⚠️ Marcar como adquirido";
       button.classList.toggle("acquired", acquired);
       button.addEventListener("click", () => {
         const set = getAcquiredSet();
