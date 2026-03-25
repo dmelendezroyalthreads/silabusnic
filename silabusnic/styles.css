@@ -138,6 +138,11 @@ dialog:not([open]) {
   gap: 16px;
 }
 
+.brand-logo-stack {
+  display: grid;
+  gap: 10px;
+}
+
 .brand-logo-shell,
 .brand-copy-shell {
   background: rgba(255, 251, 245, 0.76);
@@ -154,6 +159,10 @@ dialog:not([open]) {
   justify-content: center;
 }
 
+.brand-logo-shell-secondary {
+  padding: 8px;
+}
+
 .brand-copy-shell {
   border-radius: 28px;
   padding: 12px 18px;
@@ -166,6 +175,12 @@ dialog:not([open]) {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.72);
   padding: 2px;
+}
+
+.brand-logo-secondary {
+  width: 88px;
+  height: 88px;
+  padding: 4px;
 }
 
 .brand-copy {
