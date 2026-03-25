@@ -22,17 +22,17 @@
   "professors": [
     {
       "id": "professor-001",
-      "name": "Dra. Maria Guerrero",
+      "name": "Dra. Lucía Navarro",
       "department": "Odontologia"
     },
     {
       "id": "professor-002",
-      "name": "Dr. Carlos Melendez",
+      "name": "Dr. Andrés Castillo",
       "department": "Odontologia"
     },
     {
       "id": "professor-003",
-      "name": "Dra. Elena Paredes",
+      "name": "Dra. Verónica Salazar",
       "department": "Odontologia"
     }
   ],
