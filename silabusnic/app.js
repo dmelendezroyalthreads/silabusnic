@@ -990,7 +990,6 @@ function renderMaterials() {
     node.querySelector(".material-meta").textContent = metaParts.join(" • ");
     node.querySelector(".tag-semester").textContent = displayItem.semester;
     node.querySelector(".tag-midterm").textContent = `Parcial ${displayItem.midterm}`;
-    node.querySelector(".tag-location").textContent = displayItem.location || "Area de uso pendiente";
     const notesText = meaningfulNotes(displayItem);
     const notesNode = node.querySelector(".material-notes");
     notesNode.textContent = notesText;
