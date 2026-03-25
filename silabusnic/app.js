@@ -140,6 +140,7 @@ const els = {
   questionCarnet: document.querySelector("#question-carnet"),
   questionName: document.querySelector("#question-name"),
   questionEmail: document.querySelector("#question-email"),
+  questionClassesList: document.querySelector("#question-classes-list"),
   questionBody: document.querySelector("#question-body"),
   questionFeedback: document.querySelector("#question-feedback"),
   questionMaterialThumb: document.querySelector("#question-material-thumb"),
@@ -879,6 +880,34 @@ function meaningfulNotes(item) {
   return notes;
 }
 
+function questionClassOptions(item) {
+  const options = [item.subject, ...(item.otherSubjects || "").split(",")]
+    .map((value) => value.trim())
+    .filter(Boolean);
+  return [...new Set(options)];
+}
+
+function populateQuestionClasses(item) {
+  if (!els.questionClassesList) {
+    return;
+  }
+  const options = questionClassOptions(item);
+  els.questionClassesList.innerHTML = "";
+  for (const optionLabel of options) {
+    const label = document.createElement("label");
+    label.className = "question-class-option";
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.name = "relatedClasses";
+    input.value = optionLabel;
+    input.checked = optionLabel === item.subject;
+    const span = document.createElement("span");
+    span.textContent = optionLabel;
+    label.append(input, span);
+    els.questionClassesList.append(label);
+  }
+}
+
 function openMaterialInfo(item) {
   els.materialInfoTitle.textContent = `${item.id} • ${item.name}`;
   els.materialInfoUsage.textContent = item.timing || "N/D";
@@ -1124,6 +1153,7 @@ function openStudentQuestionDialog(item) {
   els.questionCarnet.value = selectedStudent?.carnet || "";
   els.questionName.value = selectedStudent?.name || "";
   els.questionEmail.value = selectedStudent?.email || "";
+  populateQuestionClasses(item);
   els.questionBody.value = `Material: ${item.id} - ${item.name}\nDescripción: ${item.subject} • ${item.presentation || "Sin presentación"}\n\nPregunta:\n`;
   els.questionFeedback.textContent = "En la versión en vivo, los usuarios deberán iniciar sesión con sus credenciales institucionales de estudiante o profesor antes de enviar consultas.";
   els.questionFeedback.classList.remove("hidden");
@@ -1215,6 +1245,7 @@ function saveStudentQuestion(event) {
     carnet: els.questionCarnet.value.trim(),
     name: els.questionName.value.trim(),
     replyEmail: els.questionEmail.value.trim(),
+    relatedClasses: [...document.querySelectorAll('input[name="relatedClasses"]:checked')].map((input) => input.value),
     question: els.questionBody.value.trim(),
     createdAt: new Date().toISOString(),
   };
