@@ -708,12 +708,18 @@ h1 {
 .material-card {
   display: grid;
   grid-template-columns: 72px minmax(0, 1fr);
-  gap: 12px;
-  padding: 14px;
+  gap: 10px;
+  padding: 12px;
   border-radius: 20px;
   border: 1px solid rgba(17, 46, 87, 0.08);
   background: var(--card);
   transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.material-aside {
+  display: grid;
+  gap: 6px;
+  align-content: start;
 }
 
 .material-card:hover {
@@ -783,8 +789,8 @@ h1 {
 }
 
 .material-title {
-  font-size: 1.02rem;
-  margin-bottom: 6px;
+  font-size: 1rem;
+  margin-bottom: 4px;
 }
 
 .material-notes {

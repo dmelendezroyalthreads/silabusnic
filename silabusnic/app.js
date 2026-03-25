@@ -939,7 +939,7 @@ function renderMaterials() {
     });
 
     node.querySelector(".material-code").textContent = displayItem.id;
-    node.querySelector(".material-type").textContent = displayItem.type;
+    node.querySelector(".material-type").remove();
     node.querySelector(".material-title").textContent = displayItem.name;
     node.querySelector(".material-meta").textContent =
       `${displayItem.subject} • ${displayItem.ownership || "Individual"} • ${displayItem.timing || "N/D"}`;
