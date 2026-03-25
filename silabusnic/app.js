@@ -130,6 +130,7 @@ const els = {
   materialInfoTitle: document.querySelector("#material-info-title"),
   materialInfoUsage: document.querySelector("#material-info-usage"),
   materialInfoNotes: document.querySelector("#material-info-notes"),
+  materialInfoSubjects: document.querySelector("#material-info-subjects"),
   materialInfoClose: document.querySelector("#material-info-close"),
   questionDialog: document.querySelector("#student-question-dialog"),
   questionForm: document.querySelector("#student-question-form"),
@@ -874,6 +875,7 @@ function openMaterialInfo(item) {
   els.materialInfoTitle.textContent = `${item.id} • ${item.name}`;
   els.materialInfoUsage.textContent = item.timing || "N/D";
   els.materialInfoNotes.textContent = meaningfulNotes(item) || "Sin observaciones adicionales.";
+  els.materialInfoSubjects.textContent = item.otherSubjects || "Sin asignaturas adicionales.";
   openDialog(els.materialInfoDialog);
 }
 
