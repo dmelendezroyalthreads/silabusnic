@@ -968,7 +968,7 @@ function renderMaterials() {
       if (record.draft) {
         professorStatus.textContent += " • borrador guardado";
       }
-      button.textContent = "Editar material";
+      button.textContent = "✏️ Editar material";
       button.disabled = !state.selectedProfessorId;
       button.addEventListener("click", () => {
         openProfessorEditor(item);
@@ -977,6 +977,7 @@ function renderMaterials() {
     } else {
       professorStatus.classList.add("hidden");
       questionButton.classList.toggle("hidden", state.role !== "student");
+      questionButton.textContent = "✉️ Enviar pregunta";
       questionButton.addEventListener("click", () => {
         openStudentQuestionDialog(displayItem);
       });
