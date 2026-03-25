@@ -4,6 +4,7 @@ const state = {
   selectedProfessorId: "",
   imageZoom: 1,
   welcomeStep: 1,
+  editorImageValue: "",
   catalog: null,
   customMaterials: [],
   filters: {
@@ -118,7 +119,8 @@ const els = {
   editorLocation: document.querySelector("#editor-location"),
   editorType: document.querySelector("#editor-type"),
   editorPurchase: document.querySelector("#editor-purchase"),
-  editorImage: document.querySelector("#editor-image"),
+  editorImageFile: document.querySelector("#editor-image-file"),
+  editorImagePreview: document.querySelector("#editor-image-preview"),
   editorNotes: document.querySelector("#editor-notes"),
   imageViewer: document.querySelector("#image-viewer"),
   imageViewerTitle: document.querySelector("#image-viewer-title"),
@@ -699,6 +701,12 @@ function persistStudentProgress() {
   localStorage.setItem(storageKey(state.selectedStudentId), JSON.stringify([...getAcquiredSet()]));
 }
 
+function updateEditorImagePreview(src) {
+  const previewSrc = src || "./assets/logo.png";
+  els.editorImagePreview.src = previewSrc;
+  els.editorImagePreview.alt = src ? "Vista previa de imagen cargada" : "Vista previa de imagen por defecto";
+}
+
 function svgDataUri(svg) {
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
@@ -1099,7 +1107,9 @@ function openProfessorEditor(item) {
   els.editorLocation.value = displayItem.location || els.editorLocation.value;
   els.editorType.value = displayItem.type || els.editorType.value;
   els.editorPurchase.value = displayItem.purchaseFrequency || els.editorPurchase.value;
-  els.editorImage.value = displayItem.image || "";
+  state.editorImageValue = displayItem.image || "";
+  els.editorImageFile.value = "";
+  updateEditorImagePreview(state.editorImageValue);
   els.editorNotes.value = displayItem.notes || "";
   els.editorDialog.showModal();
 }
@@ -1127,13 +1137,28 @@ function openAddMaterialDialog() {
   els.editorLocation.value = templateMaterial.location || els.editorLocation.value;
   els.editorType.value = templateMaterial.type || els.editorType.value;
   els.editorPurchase.value = templateMaterial.purchaseFrequency || els.editorPurchase.value;
-  els.editorImage.value = "";
+  state.editorImageValue = "";
+  els.editorImageFile.value = "";
+  updateEditorImagePreview("");
   els.editorNotes.value = "";
   els.editorDialog.showModal();
 }
 
 function closeProfessorEditor() {
   els.editorDialog.close();
+}
+
+function handleEditorImageUpload(event) {
+  const file = event.target.files?.[0];
+  if (!file) {
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    state.editorImageValue = typeof reader.result === "string" ? reader.result : "";
+    updateEditorImagePreview(state.editorImageValue);
+  };
+  reader.readAsDataURL(file);
 }
 
 function openStudentQuestionDialog(item) {
@@ -1188,7 +1213,7 @@ function saveProfessorEdit(event) {
     location: els.editorLocation.value.trim(),
     type: els.editorType.value.trim(),
     purchaseFrequency: els.editorPurchase.value.trim(),
-    image: els.editorImage.value.trim(),
+    image: state.editorImageValue,
     notes: els.editorNotes.value.trim(),
   };
   if (mode === "create") {
@@ -1335,6 +1360,7 @@ function bindEvents() {
   els.editorClose.addEventListener("click", closeProfessorEditor);
   els.editorCancel.addEventListener("click", closeProfessorEditor);
   els.editorForm.addEventListener("submit", saveProfessorEdit);
+  els.editorImageFile.addEventListener("change", handleEditorImageUpload);
   els.imageViewerClose.addEventListener("click", closeImageViewer);
   els.imageZoomIn.addEventListener("click", () => changeImageZoom(0.25));
   els.imageZoomOut.addEventListener("click", () => changeImageZoom(-0.25));

@@ -485,10 +485,17 @@
           Compra
           <select id="editor-purchase" name="purchaseFrequency"></select>
         </label>
-        <label class="editor-full">
-          Imagen URL
-          <input id="editor-image" name="image" type="url" placeholder="https://..." />
-        </label>
+        <div class="editor-full editor-image-upload">
+          <span>Imagen del material</span>
+          <div class="editor-image-preview">
+            <img id="editor-image-preview" src="./assets/logo.png" alt="Vista previa de la imagen del material" />
+            <div class="editor-image-copy">
+              <strong>Subir imagen para este demo</strong>
+              <p>Selecciona un archivo para reemplazar o agregar la imagen del material en este navegador.</p>
+            </div>
+          </div>
+          <input id="editor-image-file" name="imageFile" type="file" accept="image/*" />
+        </div>
         <label class="editor-full">
           Observaciones
           <textarea id="editor-notes" name="notes" rows="4"></textarea>
