@@ -941,8 +941,12 @@ function renderMaterials() {
     node.querySelector(".material-code").textContent = displayItem.id;
     node.querySelector(".material-type").remove();
     node.querySelector(".material-title").textContent = displayItem.name;
-    node.querySelector(".material-meta").textContent =
-      `${displayItem.subject} • ${displayItem.ownership || "Individual"} • ${displayItem.timing || "N/D"}`;
+    const metaParts = [displayItem.subject];
+    if (displayItem.ownership && displayItem.ownership !== "Individual") {
+      metaParts.push(displayItem.ownership);
+    }
+    metaParts.push(displayItem.timing || "N/D");
+    node.querySelector(".material-meta").textContent = metaParts.join(" • ");
     node.querySelector(".tag-semester").textContent = displayItem.semester;
     node.querySelector(".tag-midterm").textContent = `Parcial ${displayItem.midterm}`;
     node.querySelector(".tag-location").textContent = displayItem.location || "Area de uso pendiente";

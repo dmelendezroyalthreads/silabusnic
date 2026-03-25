@@ -707,7 +707,7 @@ h1 {
 
 .material-card {
   display: grid;
-  grid-template-columns: 72px minmax(0, 1fr);
+  grid-template-columns: 118px minmax(0, 1fr);
   gap: 10px;
   padding: 12px;
   border-radius: 20px;
@@ -717,7 +717,8 @@ h1 {
 }
 
 .material-aside {
-  display: grid;
+  display: flex;
+  align-items: center;
   gap: 6px;
   align-content: start;
 }
@@ -736,6 +737,7 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: 0 0 auto;
 }
 
 .material-image-button {
@@ -756,6 +758,13 @@ h1 {
   object-position: center;
   padding: 4px;
   background: rgba(255, 255, 255, 0.78);
+}
+
+.material-code {
+  padding: 5px 7px;
+  font-size: 0.68rem;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .material-body {
