@@ -826,7 +826,7 @@ function renderWelcomeStep() {
   els.welcomeTitle.textContent = onFirstStep
     ? "Antes de comenzar"
     : onSecondStep
-      ? "Cómo funciona esta demo"
+      ? "Cómo funciona este demo"
       : onThirdStep
         ? "Consultas y acceso institucional"
         : "Acciones dentro de cada material";
